@@ -1,12 +1,12 @@
 from dispy import *
 import creds
-# /\ Create a creds.py in your bot folder, and put a token variable in it.
+# Create a creds.py in your bot folder, and put a token variable in it.
 
 bot = Bot(token=creds.token)
 
 def say_hello(msg):
    if msg.author.bot: return False
-   if any(element in msg.content for element in ['hello','hola','helo','hey','hi','salut','bonjour']):
+   if any(element in msg.content.lower() for element in ['hello','hola','helo','hey','hi','salut','bonjour','cc','coucou']):
       send_message('Hello!',msg.channel_id,creds.token)
    
 def ready(args):

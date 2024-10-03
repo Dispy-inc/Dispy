@@ -14,7 +14,7 @@ def excepthook(type, value, tb):
 
 #sys.excepthook= excepthook
 
-debug_enabled = True
+debug_enabled = False
 def debug(*args, **kwargs):
    if debug_enabled: print(*args, **kwargs)
 
