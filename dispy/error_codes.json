@@ -1,0 +1,4 @@
+{
+   "toomanyfunctions": "Whoa, slow down there! You've got too many functions for one event. Try keeping it all in one function, champ!",
+   "intentdoesntexist": "This event doesn't belong to any intents, events in dispy are a bit different so you will maybe need to read the wiki."
+}
