@@ -39,6 +39,10 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [Discord API](https://discord.com/developers/docs/intro#explore-the-apis)
 
 ## <div align="center">Roadmap</div>
+**Current Stat:** Prototype</br>
+**Current Version:** None</br>
+**Current Stability:** Instable</br>
+
 - [x] Gateway
   - [ ] Resume Support
   - [ ] Exception Handling
