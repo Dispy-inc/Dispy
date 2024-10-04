@@ -29,7 +29,16 @@ Whether you're building audio bots, text-based bots, or AI-powered bots, Dispy s
 
 Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
 
-## Roadmap
+> [!NOTE]
+> This presentation is a concept, the [roadmap](https://github.com/JamesMinoucha/Dispy/edit/main/README.md#roadmap) shows our progress
+
+### Built With
+- [Python](https://www.python.org/)
+- [Asyncio](https://docs.python.org/fr/3/library/asyncio.html)
+- [AioHttp](https://docs.aiohttp.org/en/stable/)
+- [Discord API](https://discord.com/developers/docs/intro#explore-the-apis)
+
+## <div align="center">Roadmap</div>
 - [x] Gateway
   - [ ] Resume Support
   - [ ] Exception Handling
@@ -43,4 +52,27 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [ ] Support for images
 - [ ] Embed Creator
 - [x] Internal Asynchronous Support
-  - [ ] Function for user
+  - [ ] Function for User
+
+## <div align="center">Contributing</div>
+We truly appreciate any contributions! If you have suggestions for improvement, here’s how you can contribute:
+
+1. **Fork the repository.**
+2. **Create your Feature Branch (**`git checkout -b feature/CoolFeature`**)**
+3. **Commit your Changes (**`git commit -m "Add some CoolFeature"`**)**
+4. **Push to the Branch (**`git push origin feature/CoolFeature`**)**
+5. **Open a pull request.**
+
+If you'd like to suggest an improvement without coding, feel free to open an issue and tag it with "enhancement". And don’t forget to star the project if you find it helpful!
+
+Thanks again for your contribution!
+
+## <div align="center">License</div>
+
+This project is licensed under the **CC-BY-4.0 License**. For more details, please see the **[CC-BY-4.0 License](https://github.com/JamesMinoucha/Dispy/blob/main/CODE_OF_CONDUCT.md)** license.
+
+## <div align="center">Contact Us</div>
+
+If you have any questions or suggestions, feel free to reach out to us:
+- Send us an email at: **jamesfrench.contact@gmail.com**
+- Add me on discord: **Jamesfrench_**
