@@ -30,7 +30,7 @@ Whether you're building audio bots, text-based bots, or AI-powered bots, Dispy s
 Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
 
 > [!NOTE]
-> This presentation is a concept, the [roadmap](https://github.com/JamesMinoucha/Dispy/edit/main/README.md#roadmap) shows our progress
+> This presentation is a concept, the [roadmap](https://github.com/JamesMinoucha/Dispy/tree/main?tab=readme-ov-file#roadmap) shows our progress
 
 ### Built With
 - [Python](https://www.python.org/)
