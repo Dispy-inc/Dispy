@@ -51,6 +51,8 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [ ] Audio Support
 - [ ] Support for images
 - [ ] Embed Creator
+- [ ] Timestamp Support
+- [ ] Documentation
 - [x] Internal Asynchronous Support
   - [ ] Function for User
 
