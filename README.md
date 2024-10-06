@@ -46,8 +46,8 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [x] Gateway
   - [ ] Resume Support
   - [ ] Exception Handling
-- [ ] Event Handling
-- [ ] Intents Calculator
+- [ ] Event Handling *
+- [ ] Intents Calculator *
 - [ ] Rest API Support
   - [ ] Commun Function
   - [ ] Custom Function
@@ -60,6 +60,8 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [ ] Documentation
 - [x] Internal Asynchronous Support
   - [ ] Function for User
+
+* Work in progress
 
 ## <div align="center">Contributing</div>
 We truly appreciate any contributions! If you have suggestions for improvement, here’s how you can contribute:
