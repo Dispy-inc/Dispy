@@ -61,7 +61,7 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [x] Internal Asynchronous Support
   - [ ] Function for User
 
-* Work in progress
+\* Work in progress
 
 ## <div align="center">Contributing</div>
 We truly appreciate any contributions! If you have suggestions for improvement, here’s how you can contribute:
