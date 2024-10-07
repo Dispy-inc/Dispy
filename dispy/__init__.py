@@ -146,4 +146,4 @@ class Bot:
          else:
             raise ValueError("test")
       except ValueError as e:
-         raise_(ValueError, None, sys.exc_info()[2])
+         raise ValueError(e)
