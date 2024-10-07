@@ -54,10 +54,17 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
   - [ ] Rate Limiter
 - [ ] Audio Support
 - [ ] Support for images
+- [ ] Application Command
+  - [ ] Interpreter
+  - [ ] Formatter
 - [ ] Embed Creator
 - [ ] RPC
 - [ ] Timestamp Support
 - [ ] Documentation
+  - [ ] Getting Started
+  - [ ] Events List
+  - [ ] Rest API List
+  - [ ] Tutorial Custom Images
 - [x] Internal Asynchronous Support
   - [ ] Function for User
 
