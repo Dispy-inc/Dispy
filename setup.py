@@ -14,11 +14,11 @@ setup(
         'aiohttp==3.9.5',
         'websocket_client==1.8.0',
     ],
-   classifiers=[
-      'Programming Language :: Python :: 3',
-      'Programming Language :: Python :: 3.12',
-      'License :: Creative Commons Attribution 4.0 International',
-      'Operating System :: OS Independent',
-   ],
-   python_requires='>=3.12',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.12',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.12',
 )

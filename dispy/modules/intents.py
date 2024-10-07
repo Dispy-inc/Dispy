@@ -1,19 +1,6 @@
 import json
 import os
 
-# Direct message now start with DIRECT_
-# Direct message poll now start with DIRECT_
-
-
-
-
-
-
-#  0[9] 9[3 premier] 10 11
-#  12 13 14
-
-
-
 with open(os.path.dirname(__file__)+'\\intents.json', 'r') as file:
    intents_list = json.load(file)
 

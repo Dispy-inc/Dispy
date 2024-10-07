@@ -1,5 +1,5 @@
 [project]
-name = "dispy_jamesfrench"
+name = "dispy"
 version = "0.0.1"
 authors = [
   { name="James French", email="jamesfrench.contact@gmail.com" },
@@ -12,3 +12,7 @@ classifiers = []
 [project.urls]
 Homepage = "https://github.com/JamesMinoucha/Dispy"
 Issues = "https://github.com/JamesMinoucha/Dispy/issues"
+
+[project.dependencies]
+aiohttp = "==3.9.5"
+websocket-client = "==1.8.0"

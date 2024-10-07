@@ -1,5 +1,6 @@
+/__pycache__
 /dispy/__pycache__
 /dispy/dispy/__pycache__
 /dispy/assets/olds
 /creds.py
-/tests
+/testing.py

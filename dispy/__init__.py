@@ -1,14 +1,10 @@
-from .dispy import events
-from .dispy.intents import *
-from .dispy.rest_api import *
-from .dispy.utilites import *
+from dispy.modules.intents import *
+from dispy.modules.rest_api import send_message
+from dispy.module import *
 from collections.abc import Callable
 import aiohttp
 import asyncio
 import os
-import sys
-
-class MyException(Exception): pass
 
 debug_enabled = False
 def debug(*args, **kwargs):
@@ -42,7 +38,7 @@ class Bot:
       self.max_handlers = 5
       self.ws = None
       self.intent = intents
-      with open(os.path.dirname(__file__)+'\\error_codes.json', 'r') as file:
+      with open(os.path.dirname(__file__)+'\\modules\\error_codes.json', 'r') as file:
          self.error_codes = json.load(file)
    def config(self,token=None):
       if self.status != 0:
@@ -146,3 +142,5 @@ class Bot:
             raise ValueError("test")
       except ValueError as e:
          raise ValueError(e)
+      
+__all__ = ['Bot','send_message']
