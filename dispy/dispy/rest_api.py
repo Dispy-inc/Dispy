@@ -4,6 +4,7 @@ import json
 from dispy.dispy.utilites import dict_to_obj
 
 base_url = 'https://discord.com/api/v10/'
+token = None
 
 async def async_send_message(content, channel_id, __token__):
     payload = {

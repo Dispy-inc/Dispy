@@ -1,18 +1,15 @@
 from .dispy import events
 from .dispy.intents import *
-from .dispy.requests import *
+from .dispy.rest_api import *
 from .dispy.utilites import *
 from collections.abc import Callable
+from future.utils import raise_
 import aiohttp
 import asyncio
 import os
 import sys
-import traceback
 
-def excepthook(type, value, tb):
-   traceback.print_exception(type, value, tb, 1)
-
-#sys.excepthook= excepthook
+class MyException(Exception): pass
 
 debug_enabled = False
 def debug(*args, **kwargs):
@@ -131,19 +128,22 @@ class Bot:
    
    # Function to link a gateway event to a function in the user code
    def eventlink(self,event_name: str, function: Callable):
-      if event_name in every_intents:
-         is_direct = event_name in direct_intents
-         event_name = event_name[7:] if is_direct else event_name
+      try:
+         if event_name in every_intents:
+            is_direct = event_name in direct_intents
+            event_name = event_name[7:] if is_direct else event_name
 
-         if sum(1 for v in self.handlers.values() if v == event_name) < self.max_handlers:
-            self.handlers.update({
-               event_name: {
-                  "function": function,
-                  "is_direct": is_direct
-               }
-            })
+            if sum(1 for v in self.handlers.values() if v == event_name) < self.max_handlers:
+               self.handlers.update({
+                  event_name: {
+                     "function": function,
+                     "is_direct": is_direct
+                  }
+               })
 
-         else: 
-            raise errors.TooMany(self.error_codes['toomanyfunctions']) from None
-      else:
-         raise errors.EventError(self.error_codes['intentdoesntexist']) from None
+            else: 
+               raise TypeError("test")
+         else:
+            raise ValueError("test")
+      except ValueError as e:
+         raise_(ValueError, None, sys.exc_info()[2])
