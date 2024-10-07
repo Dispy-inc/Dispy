@@ -1,0 +1,14 @@
+[project]
+name = "dispy_jamesfrench"
+version = "0.0.1"
+authors = [
+  { name="James French", email="jamesfrench.contact@gmail.com" },
+]
+description = "A python-coded discord bot library"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = []
+
+[project.urls]
+Homepage = "https://github.com/JamesMinoucha/Dispy"
+Issues = "https://github.com/JamesMinoucha/Dispy/issues"
