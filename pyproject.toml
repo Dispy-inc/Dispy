@@ -7,12 +7,16 @@ authors = [
 description = "A python-coded discord bot library"
 readme = "README.md"
 requires-python = ">=3.12"
-classifiers = []
+classifiers = [
+  "Development Status :: 4 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "aiohttp>=3.9.5",
+    "websocket_client>=1.8.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/JamesMinoucha/Dispy"
 Issues = "https://github.com/JamesMinoucha/Dispy/issues"
-
-[project.dependencies]
-aiohttp = "==3.9.5"
-websocket-client = "==1.8.0"
