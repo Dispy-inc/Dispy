@@ -3,7 +3,6 @@ from .dispy.intents import *
 from .dispy.rest_api import *
 from .dispy.utilites import *
 from collections.abc import Callable
-from future.utils import raise_
 import aiohttp
 import asyncio
 import os
