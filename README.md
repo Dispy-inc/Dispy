@@ -85,7 +85,7 @@ Thanks again for your contribution!
 
 ## <div align="center">License</div>
 
-This project is licensed under the **CC-BY-4.0 License**. For more details, please see the **[CC-BY-4.0 License](https://github.com/JamesMinoucha/Dispy/blob/main/CODE_OF_CONDUCT.md)** license.
+Dispy © 2024 by James French is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 ## <div align="center">Contact Us</div>
 
