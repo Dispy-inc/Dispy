@@ -18,7 +18,7 @@ Please note that the installation process can be different between users, you wi
 
 Dispy will work with Python 3.12 or higher, it hasn't been tested with lower versions.
 
-The required library's are in the [requirement](../../requirements.txt) file on the github repository.
+The required library's are in the [requirement](../../../requirements.txt) file on the github repository.
 
 ### Installation
 
