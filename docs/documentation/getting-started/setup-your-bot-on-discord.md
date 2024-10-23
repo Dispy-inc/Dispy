@@ -4,11 +4,9 @@ icon: robot-astromech
 
 # Setup your bot on discord
 
-{% hint style="danger" %}
-THIS PAGE IS UNDER CONSTRUCTION
+{% hint style="warning" %}
+This page is still under construction
 {% endhint %}
-
-
 
 In this guide, you will be explained how to register you bot to discord and invite it on your server.
 
@@ -23,5 +21,3 @@ You will need to go on the [discord developer portal](https://discord.com/develo
 <figure><img src="../../.gitbook/assets/step_1_setupbot.png" alt=""><figcaption><p>Press the New Application button on the top right corner of the screen.</p></figcaption></figure>
 
 <figure><img src="../../.gitbook/assets/step_2_setupbot.png" alt=""><figcaption><p>Name your bot, agree to the ToS and DP, click Create</p></figcaption></figure>
-
-WORK IN PROGRESS
