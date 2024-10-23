@@ -18,4 +18,4 @@ In this space, every versions of dispy will be added to this page. Tip: Most ver
 
 
 
-<figure><img src="../../.gitbook/assets/footer.png" alt=""><figcaption></figcaption></figure>
+<figure><picture><source srcset="../../.gitbook/assets/dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/light.png" alt=""></picture><figcaption></figcaption></figure>
