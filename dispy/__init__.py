@@ -1,6 +1,6 @@
-from dispy.modules.intents import *
-from dispy.modules.rest_api import send_message
-from dispy.module import *
+from .modules.intents import *
+from .modules.rest_api import send_message
+from .module import *
 from collections.abc import Callable
 import aiohttp
 import asyncio
