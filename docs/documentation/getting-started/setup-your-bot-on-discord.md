@@ -20,8 +20,8 @@ You can completly skip this part if you've already taken the token of the bot an
 
 You will need to go on the [discord developer portal](https://discord.com/developers/applications) and create a new application
 
-<figure><img src="../../.gitbook/assets/Frame 8 (1).png" alt=""><figcaption><p>Press the New Application button on the top right corner of the screen.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/step_1_setupbot.png" alt=""><figcaption><p>Press the New Application button on the top right corner of the screen.</p></figcaption></figure>
 
-<figure><img src="../../.gitbook/assets/Frame 9.png" alt=""><figcaption><p>Name your bot, agree to the ToS and DP, click Create</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/step_2_setupbot.png" alt=""><figcaption><p>Name your bot, agree to the ToS and DP, click Create</p></figcaption></figure>
 
 WORK IN PROGRESS
