@@ -13,5 +13,5 @@ In this space, every versions of dispy will be added to this page. Tip: Most ver
 
 ### Version 0.1
 
-[0.0.2 ](0.0.2.md)![](../../.gitbook/assets/up\_triangle-alert.png)![](../../.gitbook/assets/up\_loader-circle.png)\
+[0.0.2](0.0.2.md) <img src="../../.gitbook/assets/up_triangle-alert.png" alt="" data-size="line"><img src="../../.gitbook/assets/up_loader-circle.png" alt="" data-size="line">\
 [0.0.1](0.0.1.md) <img src="../../.gitbook/assets/ban.png" alt="" data-size="line">
