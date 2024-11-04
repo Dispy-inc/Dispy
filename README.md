@@ -6,7 +6,7 @@
   <strong>Discord Bot Library</strong>
   </br></br>
   
-  [![License: CC BY 4.0](https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+  [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0)
   ![Download Count](https://img.shields.io/github/downloads/JamesMinoucha/Dispy/total.svg)
   ![Made with Heart](https://img.shields.io/badge/Made_with-%F0%9F%A4%8D-green)
   </br>
