@@ -6,19 +6,12 @@
   <strong>Discord Bot Library</strong>
   </br></br>
   
-<<<<<<< HEAD
-  [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-red?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.fr.html)
-  ![GitHub forks](https://img.shields.io/github/forks/JamesMinoucha/Dispy?style=for-the-badge)
-  ![GitHub Repo stars](https://img.shields.io/github/stars/JamesMinoucha/Dispy?style=for-the-badge)
-=======
-  [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0)
+  [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.fr.html)
   ![Download Count](https://img.shields.io/github/downloads/JamesMinoucha/Dispy/total.svg)
   ![Made with Heart](https://img.shields.io/badge/Made_with-%F0%9F%A4%8D-green)
   </br>
   ![Static Badge](https://img.shields.io/badge/Made_using-Python-yellow?logo=python&logoColor=white)
   ![GitHub forks](https://img.shields.io/github/forks/JamesMinoucha/Dispy?style=flat)
->>>>>>> f02ee9379295706a59b1cc7a2c7e0954c3012618
-
 </div>
 
 # <p align="center"></p>
@@ -110,9 +103,6 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/
-=======
-Dispy © 2024 by James French is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/4.0/
->>>>>>> f02ee9379295706a59b1cc7a2c7e0954c3012618
 
 ## <div align="center">Contact Us</div>
 
