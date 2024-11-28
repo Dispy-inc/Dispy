@@ -75,10 +75,10 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [x] Full object and autocompletion
 - [ ] Log system
 
-\* Work in progress
-\*\* Not full support
-~ Use it at your own risk
-@ Contribute to finish it!
+- \* Work in progress
+- \*\* Not full support
+- ~ Use it at your own risk
+- @ Contribute to finish it!
 
 ## <div align="center">Contributing</div>
 We truly appreciate any contributions! If you have suggestions for improvement, here’s how you can contribute:
