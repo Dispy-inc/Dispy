@@ -72,13 +72,13 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
   - [x] Changelogs
 - [x] Internal Asynchronous Support
   - [x] Function for User
-- [x] Full object and autocompletion
+  - [x] Full object and autocompletion
 - [ ] Log system
 
-- \* Work in progress
-- \*\* Not full support
-- ~ Use it at your own risk
-- @ Contribute to finish it!
+* \* Work in progress
+* \*\* Not full support
+* ~ Use it at your own risk
+* @ Contribute to finish it!
 
 ## <div align="center">Contributing</div>
 We truly appreciate any contributions! If you have suggestions for improvement, here’s how you can contribute:
@@ -95,7 +95,6 @@ Thanks again for your contribution!
 
 ## <div align="center">License</div>
 
-<<<<<<< HEAD
 #### © 2024 JamesFrench
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
