@@ -1,6 +1,12 @@
 /__pycache__
 /dispy/__pycache__
-/dispy/dispy/__pycache__
-/dispy/assets/olds
+/dispy/modules/__pycache__/
+/dispy/types/__pycache__/
+/dispy/data/__pycache__/
+/assets/olds
 /creds.py
 /testing.py
+/test.py
+/app.log
+/token.txt
+/backup

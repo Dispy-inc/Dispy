@@ -1,20 +1,26 @@
-import json
-import os
+#"-1": [
+#   "READY",
+#   "RESUMED",
+#   "VOICE_SERVER_UPDATE",
+#   "USER_UPDATE",
+#   "INTERACTION_CREATE",
+#   "ALL"
+#],
 
-with open(os.path.dirname(__file__)+'\\intents.json', 'r') as file:
-   intents_list = json.load(file)
+class intents_variable:
+    def __init__(self,intents) -> None:
+        intents_list = intents.copy()
+        del intents_list['-1']
+        self.__intents_list__ = intents_list
 
-def get_intents(event_name):
-    parents = []
-    for parent_id, events in intents_list.items():
-        if event_name in events:
-            parents.append(parent_id)
-    return parents
-
-def get_inverse_direct_intents() -> list:
-    return [intents_list["0"][9]] + intents_list["9"][:3] + intents_list["10"] + intents_list["11"]
-def get_direct_intents() -> list:
-    return intents_list["12"] + intents_list["13"] + intents_list["14"]
-
-def get_every_intents() -> list:
-    return {key for nested_dict in intents_list.values() for key in nested_dict}
+        self.intents = {key for nested_dict in intents.values() for key in nested_dict}
+        self.direct_intents = intents["12"] + intents["13"] + intents["14"] + intents["25"]
+        self.direct_intents_opposed = [intents["0"][9]] + intents["9"][:3] + intents["10"] + intents["11"] + intents["24"]
+    def get_intents(self,eventname) -> list:
+        parents = []
+        for parent_id, events in self.__intents_list__.items():
+            if eventname in events:
+                parents.append(parent_id)
+        return parents
+    def get_child(self,id):
+        return list(self.__intents_list__.values())[id]

@@ -1,2 +1,4 @@
-aiohttp==3.9.5
-websocket_client==1.8.0
+aiohttp>=3.10.10
+pydantic>=2.10.2
+pydantic_core>=2.27.1
+websocket_client>=1.8.0

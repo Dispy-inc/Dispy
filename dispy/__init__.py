@@ -1,146 +1,311 @@
+"""
+Dispy is a light-weight discord API library.
+It is recommended to import it with `from dispy import *`
+"""
+# Internal
 from dispy.modules.intents import *
-from dispy.modules.rest_api import send_message
-from dispy.module import *
-from collections.abc import Callable
-import aiohttp
+from dispy.modules import *
+import dispy.types.user as types
+from dispy.modules.rest_api import __internal__ as restapi
+from dispy.modules.error import error
+import dispy.data as data
+# External
+from typing import Callable, List, Union, Literal
+from concurrent.futures import ThreadPoolExecutor
+import aiohttp # Need to be installed (with websocket_client)
+import json
+import threading
+import time
 import asyncio
-import os
 
-debug_enabled = False
-def debug(*args, **kwargs):
-   if debug_enabled: print(*args, **kwargs)
+# 888888ba  oo                               
+# 88    `8b ``                               
+# 88     88 dP .d8888b.    88d888b. dP    dP 
+# 88     88 88 Y8ooooo.    88'  `88 88    88 
+# 88    .8P 88       88 ,, 88.  .88 88.  .88 
+# 8888888P  dP `88888P' 88 88Y888P' `8888P88 
+#                          88            .88 
+#                          dP        d8888P  
 
-every_intents = get_every_intents()
-direct_intents = get_direct_intents()
-not_direct_intents = get_inverse_direct_intents()
+# Developed by ✯James French✯ with ❤ and hopes x)
+# Licensed with GPLv3
 
-# Customs Error
-class errors:
-   class AuthentificationError(Exception):
-      def __init__(self, message):
-         super().__init__(message)
-         self.message = message
-   class TooMany(Exception):
-      def __init__(self, message):
-         super().__init__(message)
-         self.message = message
-   class EventError(Exception):
-      def __init__(self, message):
-         super().__init__(message)
-         self.message = message
+class Bot(restapi): # <- this shit has taken me hours
+    #--------------------------------------------------------------------------------------#
+    #                                      Bot Setup                                       #
+    #--------------------------------------------------------------------------------------# 
+    def __init__(self,token=None):
+        """
+        Define your bot.
 
-class Bot:
-   def __init__(self,token=None,intents=37377) -> None:
-      self.token = token
-      self.status = 0
-      self.heartbeat_interval = None
-      self.handlers = {}
-      self.max_handlers = 5
-      self.ws = None
-      self.intent = intents
-      with open(os.path.dirname(__file__)+'\\modules\\error_codes.json', 'r') as file:
-         self.error_codes = json.load(file)
-   def config(self,token=None):
-      if self.status != 0:
-         raise errors.AuthentificationError('Changing bot config during it execution is not possible.')
-      if token != None: self.token = token
-   
-   # Called when the gateway receive an discord event (not a gateway opcode)
-   async def __sendevent__(self,eventname,args):
-      tasks = []
-      for key, handler in self.handlers.items():
-         if key == eventname:
-            if eventname in not_direct_intents:
-               if handler['is_direct'] and 'guild_id' in args: return False
-               if not handler['is_direct'] and 'guild_id' not in args: return False
-              
-            tasks.append(asyncio.to_thread(handler['function'], args))
-      await asyncio.gather(*tasks)
+        See related page on the [wiki](https://jamesfrench.gitbook.io/dispy).
+        """
+        self.user: types.User = None
+        self.status = 0
+        self.decoration = self.decoration(self)
 
-   # Gateway receive function
-   async def __recv__(self):
-      async for msg in self.ws:
-         data = json.loads(msg.data)
+        self._token = token
+        self._error = error()
+        self._heartbeat_interval = None
+        self._handlers = []
+        self._session: aiohttp.ClientSession = None
+        self._ws = None
+        self._api = restapi(self._token,self._error)
+        self._loop = asyncio.new_event_loop()
+        self._executor = ThreadPoolExecutor()
+        self._tasks = []
+        threading.Thread(target=self.run_loop, daemon=True).start()
+    def run_loop(self):
+        asyncio.set_event_loop(self._loop)
+        self._loop.run_forever() # no_traceback
 
-         if data['op'] == 10: # Identification and heartbeat set
-            self.heartbeat_interval = data['d']['heartbeat_interval'] / 1000
-            
-            asyncio.create_task(self.__heartbeat__())
-            debug('Identification')
-            await self.__identify__()
-         elif data['op'] == 11: # Heartbeat received
-            debug('Heartbeat Received')
-         else: # Events
-            if data['t'] != None:
-               debug(f'Event received: {data['t']}: \n {json.dumps(data,indent=2)}')
-               await self.__sendevent__(data['t'],dict_to_obj(data['d']))
-            else:
-               debug(json.dumps(data,indent=2))
+    def __getattr__(self, name):
+        return getattr(self._api, name)
 
-   # Used to identify the bot with the token
-   async def __identify__(self):
-      for event in self.handlers.keys():
-         pass
-      payload = {
-               'op': 2,
-               'd': {
-                  'token': self.token,
-                  'intents': self.intent,
-                  'properties': {
-                     'os': 'linux',
-                     'browser': 'dispy-lib',
-                     'device': 'dispy-lib'
-                  }
-               }
+    def config(self,token=None):
+        if self.status != 0: return None
+        if token != None: self._token = token
+
+    #--------------------------------------------------------------------------------------#
+    #                                    Internal Code                                     #
+    #--------------------------------------------------------------------------------------#
+    # MAIN: Run the bot and get events
+    async def _main(self):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        async for msg in self._ws:
+            data = json.loads(msg.data)
+    
+            if data['op'] == 10: # Identification and heartbeat set
+                self._heartbeat_interval = data['d']['heartbeat_interval'] / 1000
+                asyncio.create_task(self._heartbeat())
+    
+                await self._identify()
+            else: # Events
+                if data['t'] != None:
+                    if data['t'] == "READY":
+                        self.user = types.User(**data['d']['user'])
+                    asyncio.create_task(self._sendevent(data['t'],data['d']))
+
+    # Used to call functions when a event is dispatched
+    async def _sendevent(self,eventname,args):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        once_remove = []
+    
+        for key, handler in self._handlers:
+            if key == eventname:
+                if eventname in __intents__.direct_intents_opposed:
+                    if handler['is_direct'] and 'guild_id' in args: continue
+                    if not handler['is_direct'] and 'guild_id' not in args: continue
+    
+                arguments = self._arguments_handler(args,eventname)
+                thread = asyncio.to_thread(handler['function'](**arguments))
+                asyncio.run_coroutine_threadsafe(thread, loop=self._loop)
+    
+                if handler.get('once', False):
+                    once_remove.append((key,handler))
+    
+        for key, handler in once_remove:
+            self._handlers.remove((key, handler))
+
+    # Make the bot online
+    async def _identify(self):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        payload = {
+                    'op': 2,
+                    'd': {
+                        'token': self._token,
+                        'intents': self._intents(),
+                        'properties': {
+                            'os': 'linux',
+                            'browser': 'dispy-lib',
+                            'device': 'dispy-lib'
+                        }
+                    }
+                }
+        await self._ws.send_json(payload)
+
+    # Send heartbeat to discord to keep the bot alive
+    async def _heartbeat(self):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        while self.status == 1: 
+            await asyncio.sleep(self._heartbeat_interval)
+            if self.status != 1:
+                break
+            heartbeat_payload = {
+                "op": 1,
+                "d": 'null'
             }
-      await self.ws.send_json(payload)
+            await self._ws.send_json(heartbeat_payload)
 
-   # This function send an event ( Will need to be heavily modified when resume will be added :`) )
-   async def __heartbeat__(self):
-      while True:
-         await asyncio.sleep(self.heartbeat_interval)
-         heartbeat_payload = {
-            "op": 1,
-            "d": 'null'
-         }
-         debug('Heartbeat Sended')
-         await self.ws.send_json(heartbeat_payload)
+    # Used to calculate intents
+    def _intents(self):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        events = set()
+        ids = []
+        for key, handler in self._handlers:
+            event_name = f'DIRECT_{key}' if handler['is_direct'] else key
+            events.add(event_name)  # Add event name to the set
+        
+        ids = [id for event in events if (intent_found := __intents__.get_intents(event)) for id in intent_found]  # List comprehension
+        return sum(1 << int(id) for id in ids)
 
-   # Launch the gateway between discord and the client
-   def start(self):
-      async def start():
-         session = aiohttp.ClientSession()
-         async with session.ws_connect('wss://gateway.discord.gg/?v=10&encording=json') as ws:
-            self.ws = ws
-            await self.__recv__()
-         await session.close()
-      
-      # \/ This shit is not the definition of great coding but i dont care, and this work
-      async def main():
-         await asyncio.gather(start())
-      
-      asyncio.run(main())
-   
-   # Function to link a gateway event to a function in the user code
-   def eventlink(self,event_name: str, function: Callable):
-      try:
-         if event_name in every_intents:
-            is_direct = event_name in direct_intents
-            event_name = event_name[7:] if is_direct else event_name
+    # Give a different amount of arguments depending on the event
+    def _arguments_handler(self,arguments,eventname,check=False):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        if eventname == "READY":
+            return {}
+        elif eventname in __intents__.get_child(9)+__intents__.get_child(12):
+            user = User(**arguments['author']) if check == False else User()
+            arguments.pop('author',{})
+            msg = Message(**arguments,api_=self._api)
+            return {"msg": msg, "user": user}
+        else:
+            return {"args":dict_to_obj(arguments)} if check == False else {"args":None}
+    
+    # Check args on a user function
+    def _check_handler(self,function,eventname):
+        """
+        Don't use it if you don't know what you're doing.
+        """
+        function_code = function.__code__
+        function_arguments = list(function_code.co_varnames[:function_code.co_argcount])
+        event_arguments = self._arguments_handler({},eventname,True)
+        stringcode = []
+        if not function_arguments == list(event_arguments.keys()):
+            for name, obj in event_arguments.items():
+                obj_type = type(obj).__name__
+                if obj_type.startswith('Partial'):
+                    obj_type = obj_type[7:]
+                stringcode.append(f"{name}: {obj_type}")
+            self._error.summon('function_invalid',function_name=function.__name__,arguments=", ".join(stringcode))
+        else:
+            return True
+        
+    # Start the bot
+    async def _start(self):
+        self._session = aiohttp.ClientSession()
+        try:
+            async with self._session.ws_connect('wss://gateway.discord.gg/?v=10&encoding=json') as ws:
+                self._ws = ws
+                await self._main()
+        finally:
+            await self._session.close()
+        return None
 
-            if sum(1 for v in self.handlers.values() if v == event_name) < self.max_handlers:
-               self.handlers.update({
-                  event_name: {
-                     "function": function,
-                     "is_direct": is_direct
-                  }
-               })
+    #--------------------------------------------------------------------------------------#
+    #                                     Bot Control                                      #
+    #--------------------------------------------------------------------------------------#
+    def run(self) -> None:
+        """
+        Start your bot and make it online.
+        Make your bot capable of receiving events and sending events.
+        """
+        if self.status != 0: self._error.summon('bot_is_already_running')
+        self.status = 1
+        
+        asyncio.run(self._start()) # no_traceback
+        time.sleep(2)
 
-            else: 
-               raise TypeError("test")
-         else:
-            raise ValueError("test")
-      except ValueError as e:
-         raise ValueError(e)
-      
-__all__ = ['Bot','send_message']
+    def _stop(self) -> None: # (EXPERIMENTAL)
+        """
+        Shutdown the bot. (EXPERIMENTAL)
+        """
+        async def _stop():
+            if self._ws:
+                await self._ws.close(code=1000)
+            if self._session:
+                await self._session.close()
+
+        asyncio.run_coroutine_threadsafe(_stop(),loop=self._loop)
+
+    def _debug(self):
+        pass
+
+    #--------------------------------------------------------------------------------------#
+    #                                    Event Handler                                     #
+    #--------------------------------------------------------------------------------------#
+
+    global _eventliteral
+    _eventliteral = Literal["GUILD_BAN_ADD", "MESSAGE_UPDATE", "GUILD_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_ALL", "GUILD_ROLE_CREATE", "GUILD_SCHEDULED_EVENT_CREATE", "GUILD_DELETE", "GUILD_SCHEDULED_EVENT_UPDATE", "ALL", "MESSAGE_REACTION_REMOVE_ALL", "GUILD_MEMBER_REMOVE", "INVITE_DELETE", "STAGE_INSTANCE_CREATE", "DIRECT_CHANNEL_PINS_UPDATE", "CHANNEL_DELETE", "GUILD_ROLE_UPDATE", "DIRECT_MESSAGE_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_EMOJI", "MESSAGE_DELETE_BULK", "THREAD_UPDATE", "MESSAGE_POLL_VOTE_REMOVE", "GUILD_SOUNDBOARD_SOUND_DELETE", "VOICE_STATE_UPDATE", "GUILD_INTEGRATIONS_UPDATE", "USER_UPDATE", "GUILD_ROLE_DELETE", "MESSAGE_REACTION_REMOVE", "DIRECT_MESSAGE_UPDATE", "MESSAGE_DELETE", "GUILD_SCHEDULED_EVENT_DELETE", "THREAD_MEMBER_UPDATE", "PRESENCE_UPDATE", "INTEGRATION_UPDATE", "GUILD_SOUNDBOARD_SOUND_CREATE", "WEBHOOKS_UPDATE", "GUILD_AUDIT_LOG_ENTRY_CREATE", "AUTO_MODERATION_RULE_DELETE", "READY", "AUTO_MODERATION_RULE_UPDATE", "THREAD_CREATE", "DIRECT_MESSAGE_POLL_VOTE_ADD", "RESUMED", "INTEGRATION_DELETE", "GUILD_UPDATE", "THREAD_DELETE", "GUILD_SOUNDBOARD_SOUNDS_UPDATE", "INVITE_CREATE", "MESSAGE_POLL_VOTE_ADD", "DIRECT_MESSAGE_REACTION_REMOVE", "CHANNEL_PINS_UPDATE", "MESSAGE_REACTION_REMOVE_EMOJI", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_ADD", "CHANNEL_CREATE", "VOICE_CHANNEL_EFFECT_SEND", "MESSAGE_REACTION_ADD", "GUILD_SCHEDULED_EVENT_USER_REMOVE", "GUILD_EMOJIS_UPDATE", "INTERACTION_CREATE", "DIRECT_MESSAGE_POLL_VOTE_REMOVE", "CHANNEL_UPDATE", "GUILD_BAN_REMOVE", "DIRECT_MESSAGE_DELETE", "VOICE_SERVER_UPDATE", "DIRECT_TYPING_START", "AUTO_MODERATION_RULE_CREATE", "GUILD_STICKERS_UPDATE", "MESSAGE_CREATE", "STAGE_INSTANCE_UPDATE", "THREAD_LIST_SYNC", "GUILD_SCHEDULED_EVENT_USER_ADD", "TYPING_START", "GUILD_SOUNDBOARD_SOUND_UPDATE", "INTEGRATION_CREATE", "THREAD_MEMBERS_UPDATE", "DIRECT_MESSAGE_REACTION_ADD", "AUTO_MODERATION_ACTION_EXECUTION", "STAGE_INSTANCE_DELETE"]
+
+    # IDEA HERE: Put the decoration feature into on.
+    # If event_name is not given, it will be set to the function name.
+    def on(self,function: Callable, event_name: _eventliteral, once: bool = False) -> None:
+        """
+        Add a function to call when a specific event is dispatched.
+        """
+        if self.status != 0: self._error.summon('bot_is_running')
+
+        event_name = event_name.upper()
+        if event_name in __intents__.intents:
+            if self._check_handler(function,event_name): # no_traceback
+                is_direct = event_name in __intents__.direct_intents
+                event_name = event_name[7:] if is_direct else event_name
+
+                self._handlers.append((event_name,{
+                    "function": function,
+                    "is_direct": is_direct,
+                    "once": once,
+                }))
+        else:
+            self._error.summon("event_invalid",event=event_name.upper())
+
+    def once(self,function: Callable, event_name: _eventliteral) -> None:
+        """
+        Add a function to call when a specific event is dispatched once.
+        """
+        self.on(function=function,event_name=event_name,once=True) # Optimize this function
+
+    class decoration:
+        def __init__(self, outer_instance):
+            self.outer_instance = outer_instance
+        def on(self,event_name: _eventliteral, once: bool = False) -> None:
+            """
+            Connect a function to call when a specific event is dispatched.
+            """
+            def decorator(func):
+                self.outer_instance.on(function=func,event_name=event_name,once=once) # no_traceback
+                return func
+            return decorator
+        def once(self,event_name: _eventliteral) -> None:
+            """
+            Connect a function to call when a specific event is dispatched once.
+            """
+            return self.on(event_name=event_name, once=True)
+        
+def Embed(**kwargs):
+    content = {}
+    content.update(kwargs)
+    content['type'] = 'rich'
+    return content
+
+def TokenReader(filename: str) -> str:
+    """
+    Read the first line of any file and return it, making it useful for securing token.
+    """
+    try:
+        with open(filename, 'r') as file:
+            tokenline = file.readline()
+            return tokenline
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File '{filename}' not found.")
+    except Exception as e:
+        raise ReferenceError(f"File '{filename}' cannot be read by TokenReader() with error {e}.")
+
+from dispy.types.message import Message
+from dispy.types.user import User
+typesFunc = ['Message','User']
+__all__ = ['Bot','Embed','TokenReader'] + typesFunc
+__intents__ = intents_variable(data.intents)
