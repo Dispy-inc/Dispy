@@ -42,7 +42,6 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         self.user: types.User = None
         self.status = 0
-        self.decoration = self.decoration(self)
 
         self._token = token
         self._error = error()
@@ -241,50 +240,38 @@ class Bot(restapi): # <- this shit has taken me hours
     global _eventliteral
     _eventliteral = Literal["GUILD_BAN_ADD", "MESSAGE_UPDATE", "GUILD_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_ALL", "GUILD_ROLE_CREATE", "GUILD_SCHEDULED_EVENT_CREATE", "GUILD_DELETE", "GUILD_SCHEDULED_EVENT_UPDATE", "ALL", "MESSAGE_REACTION_REMOVE_ALL", "GUILD_MEMBER_REMOVE", "INVITE_DELETE", "STAGE_INSTANCE_CREATE", "DIRECT_CHANNEL_PINS_UPDATE", "CHANNEL_DELETE", "GUILD_ROLE_UPDATE", "DIRECT_MESSAGE_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_EMOJI", "MESSAGE_DELETE_BULK", "THREAD_UPDATE", "MESSAGE_POLL_VOTE_REMOVE", "GUILD_SOUNDBOARD_SOUND_DELETE", "VOICE_STATE_UPDATE", "GUILD_INTEGRATIONS_UPDATE", "USER_UPDATE", "GUILD_ROLE_DELETE", "MESSAGE_REACTION_REMOVE", "DIRECT_MESSAGE_UPDATE", "MESSAGE_DELETE", "GUILD_SCHEDULED_EVENT_DELETE", "THREAD_MEMBER_UPDATE", "PRESENCE_UPDATE", "INTEGRATION_UPDATE", "GUILD_SOUNDBOARD_SOUND_CREATE", "WEBHOOKS_UPDATE", "GUILD_AUDIT_LOG_ENTRY_CREATE", "AUTO_MODERATION_RULE_DELETE", "READY", "AUTO_MODERATION_RULE_UPDATE", "THREAD_CREATE", "DIRECT_MESSAGE_POLL_VOTE_ADD", "RESUMED", "INTEGRATION_DELETE", "GUILD_UPDATE", "THREAD_DELETE", "GUILD_SOUNDBOARD_SOUNDS_UPDATE", "INVITE_CREATE", "MESSAGE_POLL_VOTE_ADD", "DIRECT_MESSAGE_REACTION_REMOVE", "CHANNEL_PINS_UPDATE", "MESSAGE_REACTION_REMOVE_EMOJI", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_ADD", "CHANNEL_CREATE", "VOICE_CHANNEL_EFFECT_SEND", "MESSAGE_REACTION_ADD", "GUILD_SCHEDULED_EVENT_USER_REMOVE", "GUILD_EMOJIS_UPDATE", "INTERACTION_CREATE", "DIRECT_MESSAGE_POLL_VOTE_REMOVE", "CHANNEL_UPDATE", "GUILD_BAN_REMOVE", "DIRECT_MESSAGE_DELETE", "VOICE_SERVER_UPDATE", "DIRECT_TYPING_START", "AUTO_MODERATION_RULE_CREATE", "GUILD_STICKERS_UPDATE", "MESSAGE_CREATE", "STAGE_INSTANCE_UPDATE", "THREAD_LIST_SYNC", "GUILD_SCHEDULED_EVENT_USER_ADD", "TYPING_START", "GUILD_SOUNDBOARD_SOUND_UPDATE", "INTEGRATION_CREATE", "THREAD_MEMBERS_UPDATE", "DIRECT_MESSAGE_REACTION_ADD", "AUTO_MODERATION_ACTION_EXECUTION", "STAGE_INSTANCE_DELETE"]
 
-    # IDEA HERE: Put the decoration feature into on.
-    # If event_name is not given, it will be set to the function name.
-    def on(self,function: Callable, event_name: _eventliteral, once: bool = False) -> None:
+    def on(self, eventname: _eventliteral = None, function: Callable = None, *, once: bool = False) -> None:
         """
         Add a function to call when a specific event is dispatched.
         """
-        if self.status != 0: self._error.summon('bot_is_running')
+        def decorator(fn):
+            if self.status != 0: self._error.summon('bot_is_running')
 
-        event_name = event_name.upper()
-        if event_name in self._data.intents.intents:
-            if self._check_handler(function,event_name): # no_traceback
-                is_direct = event_name in self._data.intents.direct_intents
-                event_name = event_name[7:] if is_direct else event_name
+            if eventname is None: event_name = fn.__name__.upper()
+            else: event_name = eventname.upper()
+            if event_name in self._data.intents.intents:
+                if self._check_handler(fn,event_name): # no_traceback
+                    is_direct = event_name in self._data.intents.direct_intents
+                    event_name = event_name[7:] if is_direct else event_name
 
-                self._handlers.append((event_name,{
-                    "function": function,
-                    "is_direct": is_direct,
-                    "once": once,
-                }))
-        else:
-            self._error.summon("event_invalid",event=event_name.upper())
+                    self._handlers.append((event_name,{
+                        "function": fn,
+                        "is_direct": is_direct,
+                        "once": once,
+                    }))
+            else:
+                self._error.summon("event_invalid",event=event_name.upper())
+        if function is not None: return decorator(function)
+        else: return decorator
 
-    def once(self,function: Callable, event_name: _eventliteral) -> None:
+    def once(self, eventname: _eventliteral = None, function: Callable = None, *, once: bool = True) -> None:
         """
         Add a function to call when a specific event is dispatched once.
         """
-        self.on(function=function,event_name=event_name,once=True) # Optimize this function
-
-    class decoration:
-        def __init__(self, outer_instance):
-            self.outer_instance = outer_instance
-        def on(self,event_name: _eventliteral, once: bool = False) -> None:
-            """
-            Connect a function to call when a specific event is dispatched.
-            """
-            def decorator(func):
-                self.outer_instance.on(function=func,event_name=event_name,once=once) # no_traceback
-                return func
-            return decorator
-        def once(self,event_name: _eventliteral) -> None:
-            """
-            Connect a function to call when a specific event is dispatched once.
-            """
-            return self.on(event_name=event_name, once=True)
+        def decorator(fn):
+            self.on(eventname=eventname,function=fn,once=once)
+        if function is not None: return decorator(function)
+        else: return decorator
         
 def Embed(**kwargs):
     content = {}
