@@ -8,7 +8,7 @@ from dispy.modules import *
 import dispy.types.user as types
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import error
-import dispy.data as data
+from dispy.data import data
 # External
 from typing import Callable, List, Union, Literal
 from concurrent.futures import ThreadPoolExecutor
@@ -54,6 +54,7 @@ class Bot(restapi): # <- this shit has taken me hours
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
+        self._data = data()
         threading.Thread(target=self.run_loop, daemon=True).start()
     def run_loop(self):
         asyncio.set_event_loop(self._loop)
@@ -97,7 +98,7 @@ class Bot(restapi): # <- this shit has taken me hours
     
         for key, handler in self._handlers:
             if key == eventname:
-                if eventname in __intents__.direct_intents_opposed:
+                if eventname in self._data.intents.direct_intents_opposed:
                     if handler['is_direct'] and 'guild_id' in args: continue
                     if not handler['is_direct'] and 'guild_id' not in args: continue
     
@@ -156,7 +157,7 @@ class Bot(restapi): # <- this shit has taken me hours
             event_name = f'DIRECT_{key}' if handler['is_direct'] else key
             events.add(event_name)  # Add event name to the set
         
-        ids = [id for event in events if (intent_found := __intents__.get_intents(event)) for id in intent_found]  # List comprehension
+        ids = [id for event in events if (intent_found := self._data.intents.get_intents(event)) for id in intent_found]  # List comprehension
         return sum(1 << int(id) for id in ids)
 
     # Give a different amount of arguments depending on the event
@@ -166,7 +167,7 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         if eventname == "READY":
             return {}
-        elif eventname in __intents__.get_child(9)+__intents__.get_child(12):
+        elif eventname in self._data.intents.get_child(9)+self._data.intents.get_child(12):
             user = User(**arguments['author']) if check == False else User()
             arguments.pop('author',{})
             msg = Message(**arguments,api_=self._api)
@@ -249,9 +250,9 @@ class Bot(restapi): # <- this shit has taken me hours
         if self.status != 0: self._error.summon('bot_is_running')
 
         event_name = event_name.upper()
-        if event_name in __intents__.intents:
+        if event_name in self._data.intents.intents:
             if self._check_handler(function,event_name): # no_traceback
-                is_direct = event_name in __intents__.direct_intents
+                is_direct = event_name in self._data.intents.direct_intents
                 event_name = event_name[7:] if is_direct else event_name
 
                 self._handlers.append((event_name,{
@@ -304,8 +305,10 @@ def TokenReader(filename: str) -> str:
     except Exception as e:
         raise ReferenceError(f"File '{filename}' cannot be read by TokenReader() with error {e}.")
 
+# Types
 from dispy.types.message import Message
 from dispy.types.user import User
 typesFunc = ['Message','User']
+
+# END
 __all__ = ['Bot','Embed','TokenReader'] + typesFunc
-__intents__ = intents_variable(data.intents)

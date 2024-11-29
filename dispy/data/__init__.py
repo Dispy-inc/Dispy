@@ -1,15 +1,8 @@
-import json
-import os
+from dispy.data.errors import errors
+from dispy.data.intents import intents
+from dispy.modules.intents import intents_variable
 
-def load_json_data(file_name):
-    """Load JSON data from a file with error handling."""
-    file_path = os.path.join(os.path.dirname(__file__), file_name)
-
-    with open(file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-    return data
-
-# Usage
-intents = load_json_data('intents.json')
-errors = load_json_data('errors.json')
+class data:
+    def __init__(self):
+        self.errors = errors
+        self.intents = intents_variable(intents)
