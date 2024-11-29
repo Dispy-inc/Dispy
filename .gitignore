@@ -13,3 +13,4 @@
 /build
 /dispy_bot.egg-info
 /dist
+/.pypirc
