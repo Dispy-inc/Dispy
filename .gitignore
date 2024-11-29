@@ -10,3 +10,6 @@
 /app.log
 /token.txt
 /backup
+/build
+/dispy_bot.egg-info
+/dist
