@@ -17,7 +17,8 @@ setup(
         "websocket_client>=1.8.0",
     ],
     classifiers=[
-        "Programming Language :: Python :: 4 - Beta",
+        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",

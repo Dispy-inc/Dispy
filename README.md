@@ -7,7 +7,7 @@
   </br></br>
   
   [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.fr.html)
-  ![Download Count](https://img.shields.io/github/downloads/JamesMinoucha/Dispy/total.svg)
+  ![PyPI - Downloads](https://img.shields.io/pypi/dm/dispy-bot)
   ![Made with Heart](https://img.shields.io/badge/Made_with-%F0%9F%A4%8D-green)
   </br>
   ![Static Badge](https://img.shields.io/badge/Made_using-Python-yellow?logo=python&logoColor=white)
