@@ -33,6 +33,7 @@ import aiohttp # Need to be installed (with websocket_client)
 import json
 import threading
 import time
+from warnings import deprecated
 import asyncio
 
 # 888888ba  oo                               
@@ -284,6 +285,14 @@ def TokenReader(filename: str) -> str:
     except Exception as e:
         raise ReferenceError(f"File '{filename}' cannot be read by TokenReader() with error {e}.")
 
+# I keep this to support old version
+@deprecated('This function is deprecated, use EmbedBuilder instead!')
+def Embed(**kwargs):
+    content = {}
+    content.update(kwargs)
+    content['type'] = 'rich'
+    return content
+
 # Types
 from dispy.types.message import Message
 from dispy.types.interaction import Interaction
@@ -293,4 +302,4 @@ from dispy.types.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll,
 typesFunc = ['Message','User', 'Interaction', 'ReactionAdd', 'ReactionRemove', 'ReactionRemoveAll', 'ReactionRemoveEmoji']
 
 # END
-__all__ = ['Bot','EmbedBuilder','TokenReader'] + typesFunc
+__all__ = ['Bot','EmbedBuilder','Embed','TokenReader'] + typesFunc
