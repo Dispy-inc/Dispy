@@ -31,7 +31,7 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 * Contribute
   * [Adding an API function](informations/contribute/adding-an-api-function.md): Learn how to add any missing functions to Dispy
 * Versions
-  * [0.1.05](<informations/changelogs/0.1.0 (1).md>)
+  * [0.1.05](informations/changelogs/0.1.05.md)
   * [0.1.0](informations/changelogs/0.1.0.md)
   * [0.0.1](informations/changelogs/0.0.1.md)
 * [Roadmap](informations/roadmap.md): See the progression of Dispy

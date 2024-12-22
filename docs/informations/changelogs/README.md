@@ -25,6 +25,6 @@ In this space, every versions of dispy will be added to this page. Tip: Most ver
 ### Versions
 
 * 0.1.1 (Coming soon)
-* [0.1.05](<0.1.0 (1).md>)
+* [0.1.05](0.1.05.md)
 * [0.1.0](0.1.0.md) <picture><source srcset="../../.gitbook/assets/warning_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/warning_light.png" alt=""></picture>
 * [0.0.1](0.0.1.md) <picture><source srcset="../../.gitbook/assets/cross_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/cross_light.png" alt=""></picture>
