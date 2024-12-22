@@ -14,18 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class Snowflake(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
+from dispy.modules.dictwrapper import DictWrapper
+from dispy.types.variable import Snowflake, Timestamp
+from typing import List, Dict, Any
 
-class Timestamp(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Invalid(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Null(str):
-    def __init__(self):
-        pass
+from dispy.types.user import User
+
+class StickerItem(DictWrapper):
+    id: Snowflake
+    name: str
+    format_type: int
+
+
+class Sticker(DictWrapper):
+    id: Snowflake
+    pack_id: Snowflake
+    name: str
+    description: str
+    tags: str
+    type: int
+    format_type: int
+    available: bool
+    guild_id: Snowflake
+    user: User
+    sort_value: int

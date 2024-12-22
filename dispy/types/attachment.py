@@ -14,18 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class Snowflake(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
+from dispy.modules.dictwrapper import DictWrapper
+from dispy.types.variable import Snowflake, Timestamp
+from typing import List, Dict, Any
 
-class Timestamp(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Invalid(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Null(str):
-    def __init__(self):
-        pass
+class Attachment(DictWrapper):
+    id: Snowflake
+    filename: str
+    title: str
+    description: str
+    content_type: str
+    size: int
+    url: str
+    proxy_url: str
+    height: int
+    width: int
+    ephemeral: bool
+    duration_secs: float
+    waveform: str
+    flags: int

@@ -14,18 +14,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-class Snowflake(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
+from dispy.modules.dictwrapper import DictWrapper
+from dispy.types.variable import Snowflake, Timestamp
+from typing import List, Dict, Any
 
-class Timestamp(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Invalid(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Null(str):
-    def __init__(self):
-        pass
+from dispy.types.guild import Member
+
+class ThreadMember(DictWrapper):
+    id: Snowflake
+    user_id: Snowflake
+    join_timestamp: Timestamp
+    flags: int
+    member: Member
+
+class ThreadMetadata(DictWrapper):
+    archived: bool
+    auto_archive_duration: int
+    archive_timestamp: Timestamp
+    locked: bool
+    invitable: bool
+    create_timestamp: Timestamp
+
+class ForumTag(DictWrapper):
+    id: Snowflake
+    name: str
+    moderated: bool
+    emoji_id: Snowflake
+    emoji_name: str
+
+class DefaultReaction(DictWrapper):
+    emoji_id: Snowflake
+    emoji_name: str

@@ -18,31 +18,42 @@ from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-class AvatarDecorationData(DictWrapper):
-    asset: str
-    sku_id: Snowflake
-    expires_at: int
+from dispy.types.emoji import Emoji
+from dispy.types.channel import Channel
 
-class User(DictWrapper):
+
+class ComponentDefaultValue(DictWrapper):
     id: Snowflake
-    username: str
-    discriminator: str
-    display_name: str
-    global_name: str
-    avatar: str
-    clan: Any
-    bot: bool
-    system: bool # This is useless x)
-    mfa_enabled: bool
-    verified: bool
-    email: str
-    locale: str
-    flags: int
-    banner: str
-    banner_color: int
-    accent_color: int
-    premium_type: int
-    public_flags: int
-    primary_guild: str
-    avatar_decoration_data: AvatarDecorationData
-    _api = None
+    type: str
+
+
+class ComponentOption(DictWrapper):
+    label: str
+    value: str
+    description: str
+    emoji: Emoji
+    default: bool
+
+
+class ComponentObject(DictWrapper):
+    type: int
+    style: int
+    label: str
+    emoji: Emoji
+    custom_id: str
+    sku_id: Snowflake
+    url: str
+    value: str
+    required: bool
+    disabled: bool
+    options: List[ComponentOption]
+    channel_types: List[Channel]
+    placeholder: str
+    default_values: List[ComponentDefaultValue]
+    min_values: int
+    max_values: int
+
+
+class Component(DictWrapper):
+    type: int
+    components: List[ComponentObject]

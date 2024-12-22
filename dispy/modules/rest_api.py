@@ -1,9 +1,27 @@
+# Dispy - Python Discord API library for discord bots.
+# Copyright (C) 2024  James French
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import aiohttp
 import asyncio
 import json
 import threading
 from dispy.modules import dict_to_obj
-from typing import Generic, TypeVar, Type, Unpack
+from dispy.types.embed import EmbedBuilder
+from dispy.types.variable import Invalid
+from typing import Generic, TypeVar, Type
 
 # 888888ba  oo                               
 # 88    `8b ``                               
@@ -30,20 +48,28 @@ class result(Generic[T]):
         self.loop = self.api._loop
         self._cls = cls
     
-    def __class_getitem__(cls, item):
-        cls._cls = item
-        return cls
-    
     def get(self) -> T:
         """
         Will block the code execution until response is given.
         """
-        async def asynchronous() -> T:
-            return await self.future
+        if not isinstance(self.future,Invalid):
+            async def asynchronous() -> T:
+                return await self.future
+            
+            future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self.loop)
+            result = future_result.result(timeout=7)
+        else:
+            self.api._error.summon("getting_invalid",stop=False,error=self.future)
+            return None
         
-        future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self.loop)
-        result = future_result.result(timeout=7)
-        return self._cls(**result, api_=self.api) if 'api_' in Message.__annotations__ and self._cls else self._cls(**result)
+        if isinstance(result,Invalid):
+            self.api._error.summon("getting_invalid",stop=False,error=result)
+            return None
+        else:
+            return self._cls(**result, _api=self.api) if hasattr(self._cls,'_api') else self._cls(**result)
+
+
+
 
 from dispy.types.message import Message
 
@@ -56,79 +82,124 @@ class __internal__(Generic[T]):
         }
         self._loop = asyncio.new_event_loop()
         self._base_url = 'https://discord.com/api/v10/'
+        self._api = self
         self._error = error_handler
         threading.Thread(target=self.run_loop, daemon=True).start()
     def run_loop(self):
         asyncio.set_event_loop(self._loop)
         self._loop.run_forever() # no_traceback
 
-    class _encoder(json.JSONEncoder):
-        def default(self, obj):
-            # Check if the object has '_value' to see if it is safe to serialize it
-            if hasattr(obj, '_value'):
-                return obj._value
-            return super().default(obj)
-
     async def __request__(self,function,path,payload=None):
         args = {}
         if payload:
-            serialized_payload = json.dumps(payload, cls=self._encoder)
-            args['json'] = json.loads(serialized_payload)
+            args['json'] = payload
         async with aiohttp.ClientSession() as session:
             try:
                 async with getattr(session, function)(f'{self._base_url}{path}', headers=self._header, **args) as response:
                     if response.status not in [200, 204]:
                         error = json.loads(await response.text())
                         self._error.summon("request_failed",stop=False,code=response.status,error=error["message"])
+                        return Invalid(self._error.get("request_failed",code=response.status,error=error["message"]))
                     else:
                         if response.status != 204:
                             response_data = await response.json()
                             return dict_to_obj(response_data)
                         else:
                             return None
-            except Exception as e:
-                self._error.summon("dispy_request_error",stop=False,error=e)
+            except Exception as err:
+                self._error.summon("dispy_request_error",stop=False,error=err)
 
     #--------------------------------------------------------------------------------------#
     #                                       Requests                                       #
     #--------------------------------------------------------------------------------------#
-
-    def create_message(self,content=None,channel_id=None, **kwargs: Unpack[Message]) -> result[Message]:
+    def create_message(self,content=None, channel_id=None, embeds=None, reply_to: Message = None, **kwargs) -> result[Message]:
+        
         """
-        Create a message.
+        Send a message in a specific channel.
         """
-        future = self._loop.create_future()
+        future = self._api._loop.create_future()
 
-        async def _asynchronous(content,channel_id, **kwargs):
+        async def _asynchronous(embeds):
             payload = {}
-
+    
+            # Reply
+            if reply_to != None:
+                payload.update({
+                    "message_reference": {
+                        "channel_id": reply_to.channel_id,
+                        "message_id": reply_to.id,
+                        "guild_id": reply_to.guild_id,
+                        "type": 0
+                    },
+                    "type": 19
+                })
+    
             # Embed
-            embeds = kwargs.get('embeds',None)
+            if isinstance(embeds, list):
+                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
+            else:
+                if isinstance(embeds, EmbedBuilder):
+                    embeds = embeds.get()
             if embeds is not None:
                 if not isinstance(embeds, list):
                     embeds = [embeds]
-                kwargs['embeds'] = embeds
-
+                payload.update({"embeds": embeds})
+            
+            # Reste
             if kwargs:
                 payload.update(kwargs)
             if content:
                 payload.update({"content": content})
             
-            result = await self.__request__('post', f'channels/{channel_id}/messages', payload) # no_traceback
+            result = await self._api.__request__('post', f'channels/{channel_id}/messages', payload) # no_traceback
             future.set_result(result)
         
-        asyncio.run_coroutine_threadsafe(_asynchronous(content,channel_id, **kwargs),self._loop)
-        return result[Message](future,self,Message)
+        asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
+        return result[Message](future,self._api,Message)
 
     def delete_message(self,channel_id,message_id) -> result[None]:
         """
         Delete a specific message.
         """
-        future = self._loop.create_future()
+        future = self._api._loop.create_future()
 
         async def _asynchronous(channel_id,message_id):
-            result = await self.__request__('delete', f'channels/{channel_id}/messages/{message_id}') # no_traceback
+            result = await self._api.__request__('delete', f'channels/{channel_id}/messages/{message_id}') # no_traceback
             future.set_result(result)
         
-        asyncio.run_coroutine_threadsafe(_asynchronous(channel_id, message_id), self._loop)
-        return result[None](future,self)
+        asyncio.run_coroutine_threadsafe(_asynchronous(channel_id, message_id), self._api._loop)
+        return result[None](future,self._api,None)
+    
+    def edit_message(self,content=None, channel_id=None, message_id=None, embeds=None, **kwargs) -> result[Message]:
+        
+        """
+        Edit a specific message in a specific channel.
+        You need to be the author of the message to edit it.
+        """
+        future = self._api._loop.create_future()
+    
+        async def _asynchronous(embeds):
+            payload = {}
+
+            # Embed
+            if isinstance(embeds, list):
+                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
+            else:
+                if isinstance(embeds, EmbedBuilder):
+                    embeds = embeds.get()
+            if embeds is not None:
+                if not isinstance(embeds, list):
+                    embeds = [embeds]
+                payload.update({"embeds": embeds})
+            
+            # Reste
+            if kwargs:
+                payload.update(kwargs)
+            if content:
+                payload.update({"content": content})
+            
+            result = await self._api.__request__('patch', f'channels/{channel_id}/messages/{message_id}', payload) # no_traceback
+            future.set_result(result)
+        
+        asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
+        return result[Message](future,self._api,Message)

@@ -1,3 +1,19 @@
+# Dispy - Python Discord API library for discord bots.
+# Copyright (C) 2024  James French
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 """
 Dispy is a light-weight discord API library.
 It is recommended to import it with `from dispy import *`
@@ -5,12 +21,13 @@ It is recommended to import it with `from dispy import *`
 # Internal
 from dispy.modules.intents import *
 from dispy.modules import *
-import dispy.types.user as types
+from dispy.types.user import User
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import error
+from dispy.modules.eventargs import _eventargs
 from dispy.data import data
 # External
-from typing import Callable, List, Union, Literal
+from typing import Callable, Literal
 from concurrent.futures import ThreadPoolExecutor
 import aiohttp # Need to be installed (with websocket_client)
 import json
@@ -40,7 +57,7 @@ class Bot(restapi): # <- this shit has taken me hours
 
         See related page on the [wiki](https://jamesfrench.gitbook.io/dispy).
         """
-        self.user: types.User = None
+        self.user: User = None
         self.status = 0
 
         self._token = token
@@ -50,12 +67,13 @@ class Bot(restapi): # <- this shit has taken me hours
         self._session: aiohttp.ClientSession = None
         self._ws = None
         self._api = restapi(self._token,self._error)
+        self._data = data()
+        self._eventargs = _eventargs(self._data.intents,self._error)
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
-        self._data = data()
-        threading.Thread(target=self.run_loop, daemon=True).start()
-    def run_loop(self):
+        threading.Thread(target=self._run_loop, daemon=True).start()
+    def _run_loop(self):
         asyncio.set_event_loop(self._loop)
         self._loop.run_forever() # no_traceback
 
@@ -72,7 +90,7 @@ class Bot(restapi): # <- this shit has taken me hours
     # MAIN: Run the bot and get events
     async def _main(self):
         """
-        Don't use it if you don't know what you're doing.
+        🚫 Don't use it if you don't know what you're doing.
         """
         async for msg in self._ws:
             data = json.loads(msg.data)
@@ -85,36 +103,41 @@ class Bot(restapi): # <- this shit has taken me hours
             else: # Events
                 if data['t'] != None:
                     if data['t'] == "READY":
-                        self.user = types.User(**data['d']['user'])
+                        self.user = User(**data['d']['user'])
                     asyncio.create_task(self._sendevent(data['t'],data['d']))
 
     # Used to call functions when a event is dispatched
-    async def _sendevent(self,eventname,args):
+    async def _sendevent(self, eventname, args):
         """
-        Don't use it if you don't know what you're doing.
+        🚫 Don't use it if you don't know what you're doing.
         """
         once_remove = []
+        tasks = []
     
         for key, handler in self._handlers:
             if key == eventname:
                 if eventname in self._data.intents.direct_intents_opposed:
-                    if handler['is_direct'] and 'guild_id' in args: continue
-                    if not handler['is_direct'] and 'guild_id' not in args: continue
+                    if handler['is_direct'] and 'guild_id' in args:
+                        continue
+                    if not handler['is_direct'] and 'guild_id' not in args:
+                        continue
     
-                arguments = self._arguments_handler(args,eventname)
-                thread = asyncio.to_thread(handler['function'](**arguments))
-                asyncio.run_coroutine_threadsafe(thread, loop=self._loop)
+                arguments = self._eventargs.set(eventname, self._api, **args)
+                task = asyncio.to_thread(handler['function'], **arguments)
+                tasks.append(task)
     
                 if handler.get('once', False):
-                    once_remove.append((key,handler))
+                    once_remove.append((key, handler))
     
+        if tasks:
+            await asyncio.gather(*tasks)
         for key, handler in once_remove:
             self._handlers.remove((key, handler))
 
     # Make the bot online
     async def _identify(self):
         """
-        Don't use it if you don't know what you're doing.
+        🚫 Don't use it if you don't know what you're doing.
         """
         payload = {
                     'op': 2,
@@ -133,7 +156,7 @@ class Bot(restapi): # <- this shit has taken me hours
     # Send heartbeat to discord to keep the bot alive
     async def _heartbeat(self):
         """
-        Don't use it if you don't know what you're doing.
+        🚫 Don't use it if you don't know what you're doing.
         """
         while self.status == 1: 
             await asyncio.sleep(self._heartbeat_interval)
@@ -148,7 +171,7 @@ class Bot(restapi): # <- this shit has taken me hours
     # Used to calculate intents
     def _intents(self):
         """
-        Don't use it if you don't know what you're doing.
+        🚫 Don't use it if you don't know what you're doing.
         """
         events = set()
         ids = []
@@ -159,39 +182,6 @@ class Bot(restapi): # <- this shit has taken me hours
         ids = [id for event in events if (intent_found := self._data.intents.get_intents(event)) for id in intent_found]  # List comprehension
         return sum(1 << int(id) for id in ids)
 
-    # Give a different amount of arguments depending on the event
-    def _arguments_handler(self,arguments,eventname,check=False):
-        """
-        Don't use it if you don't know what you're doing.
-        """
-        if eventname == "READY":
-            return {}
-        elif eventname in self._data.intents.get_child(9)+self._data.intents.get_child(12):
-            user = User(**arguments['author']) if check == False else User()
-            arguments.pop('author',{})
-            msg = Message(**arguments,api_=self._api)
-            return {"msg": msg, "user": user}
-        else:
-            return {"args":dict_to_obj(arguments)} if check == False else {"args":None}
-    
-    # Check args on a user function
-    def _check_handler(self,function,eventname):
-        """
-        Don't use it if you don't know what you're doing.
-        """
-        function_code = function.__code__
-        function_arguments = list(function_code.co_varnames[:function_code.co_argcount])
-        event_arguments = self._arguments_handler({},eventname,True)
-        stringcode = []
-        if not function_arguments == list(event_arguments.keys()):
-            for name, obj in event_arguments.items():
-                obj_type = type(obj).__name__
-                if obj_type.startswith('Partial'):
-                    obj_type = obj_type[7:]
-                stringcode.append(f"{name}: {obj_type}")
-            self._error.summon('function_invalid',function_name=function.__name__,arguments=", ".join(stringcode))
-        else:
-            return True
         
     # Start the bot
     async def _start(self):
@@ -218,7 +208,7 @@ class Bot(restapi): # <- this shit has taken me hours
         asyncio.run(self._start()) # no_traceback
         time.sleep(2)
 
-    def _stop(self) -> None: # (EXPERIMENTAL)
+    def stop(self) -> None:
         """
         Shutdown the bot. (EXPERIMENTAL)
         """
@@ -227,8 +217,16 @@ class Bot(restapi): # <- this shit has taken me hours
                 await self._ws.close(code=1000)
             if self._session:
                 await self._session.close()
+            self.status = 0
 
         asyncio.run_coroutine_threadsafe(_stop(),loop=self._loop)
+
+    def custom_request(self,function,path,payload=None):
+        async def asynchronous():
+            return await self._api.__request__(function=function,path=path,payload=payload)
+        
+        future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self._loop)
+        return future_result.result(timeout=7)
 
     def _debug(self):
         pass
@@ -250,7 +248,7 @@ class Bot(restapi): # <- this shit has taken me hours
             if eventname is None: event_name = fn.__name__.upper()
             else: event_name = eventname.upper()
             if event_name in self._data.intents.intents:
-                if self._check_handler(fn,event_name): # no_traceback
+                if self._eventargs.check_function(fn,event_name): # no_traceback
                     is_direct = event_name in self._data.intents.direct_intents
                     event_name = event_name[7:] if is_direct else event_name
 
@@ -272,12 +270,6 @@ class Bot(restapi): # <- this shit has taken me hours
             self.on(eventname=eventname,function=fn,once=once)
         if function is not None: return decorator(function)
         else: return decorator
-        
-def Embed(**kwargs):
-    content = {}
-    content.update(kwargs)
-    content['type'] = 'rich'
-    return content
 
 def TokenReader(filename: str) -> str:
     """
@@ -294,8 +286,11 @@ def TokenReader(filename: str) -> str:
 
 # Types
 from dispy.types.message import Message
+from dispy.types.interaction import Interaction
 from dispy.types.user import User
-typesFunc = ['Message','User']
+from dispy.types.embed import EmbedBuilder
+from dispy.types.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
+typesFunc = ['Message','User', 'Interaction', 'ReactionAdd', 'ReactionRemove', 'ReactionRemoveAll', 'ReactionRemoveEmoji']
 
 # END
-__all__ = ['Bot','Embed','TokenReader'] + typesFunc
+__all__ = ['Bot','EmbedBuilder','TokenReader'] + typesFunc
