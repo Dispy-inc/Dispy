@@ -1,17 +1,30 @@
 ---
 icon: line-height
+layout:
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: false
 ---
 
 # Changelogs
 
+***
+
 In this space, every versions of dispy will be added to this page. Tip: Most version of dispy are not destructive and your old code might be compatible with newer one, else, this will be shown in the changelog.
 
-<img src="../../.gitbook/assets/triangle-alert.png" alt="" data-size="line"> - Destructive, if upgraded to, your code will need to be revisited.\
-<img src="../../.gitbook/assets/ban.png" alt="" data-size="line"> - Outdated, may be unsecure or unusable.\
-<img src="../../.gitbook/assets/loader-circle.png" alt="" data-size="line"> - Work in progress, not yet released.\
-<img src="../../.gitbook/assets/rocket.png" alt="" data-size="line"> - New release, be cool!&#x20;
+<picture><source srcset="../../.gitbook/assets/warning_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/warning_light.png" alt=""></picture>- Destructive, if upgraded to, your code will need to be revisited.\
+<picture><source srcset="../../.gitbook/assets/cross_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/cross_light.png" alt=""></picture>- Outdated, may be unsecure or unusable.
 
-### Version 0.1
+### Versions
 
-* [0.1.0](0.1.0.md) ![](../../.gitbook/assets/rocket.png)<img src="../../.gitbook/assets/up_triangle-alert.png" alt="" data-size="line">
-* [0.0.1](0.0.1.md) <img src="../../.gitbook/assets/ban.png" alt="" data-size="line">
+* 0.1.1 (Coming soon)
+* [0.1.05](0.1.0.md) (Coming soon)
+* [0.1.0](0.1.0-1.md) <picture><source srcset="../../.gitbook/assets/warning_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/warning_light.png" alt=""></picture>
+* [0.0.1](0.0.1.md) <picture><source srcset="../../.gitbook/assets/cross_dark.png" media="(prefers-color-scheme: dark)"><img src="../../.gitbook/assets/cross_light.png" alt=""></picture>
