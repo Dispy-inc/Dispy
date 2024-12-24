@@ -141,17 +141,17 @@ class Bot(restapi): # <- this shit has taken me hours
         🚫 Don't use it if you don't know what you're doing.
         """
         payload = {
-                    'op': 2,
-                    'd': {
-                        'token': self._token,
-                        'intents': self._intents(),
-                        'properties': {
-                            'os': 'linux',
-                            'browser': 'dispy-lib',
-                            'device': 'dispy-lib'
-                        }
-                    }
+            'op': 2,
+            'd': {
+                'token': self._token,
+                'intents': self._intents(),
+                'properties': {
+                    'os': 'linux',
+                    'browser': 'dispy-lib',
+                    'device': 'dispy-lib'
                 }
+            }
+        }
         await self._ws.send_json(payload)
 
     # Send heartbeat to discord to keep the bot alive
@@ -179,8 +179,8 @@ class Bot(restapi): # <- this shit has taken me hours
         for key, handler in self._handlers:
             event_name = f'DIRECT_{key}' if handler['is_direct'] else key
             events.add(event_name)  # Add event name to the set
-        
-        ids = [id for event in events if (intent_found := self._data.intents.get_intents(event)) for id in intent_found]  # List comprehension
+
+        ids = list(set([id for event in events if (intent_found := self._data.intents.get_intents(event)) for id in intent_found]))
         return sum(1 << int(id) for id in ids)
 
         

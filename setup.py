@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='dispy-bot',
-    version='0.1.0',
+    version='0.1.0.6',
     description='A python-coded discord bot library.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
