@@ -18,6 +18,7 @@
 * [Contribute](informations/contribute/README.md)
   * [Adding an API function](informations/contribute/adding-an-api-function.md)
 * [Changelogs](informations/changelogs/README.md)
+  * [0.1.0.6](informations/changelogs/0.1.0.6.md)
   * [0.1.0.5](informations/changelogs/0.1.0.5.md)
   * [0.1.0](informations/changelogs/0.1.0.md)
   * [0.0.1](informations/changelogs/0.0.1.md)
