@@ -11,9 +11,8 @@ setup(
     url='https://github.com/JamesMinoucha/Dispy',
     packages=find_packages(),
     install_requires=[
-        "aiohttp>=3.10.10",
-        "pydantic>=2.10.2",
-        "pydantic_core>=2.27.1",
+        "aiohttp>=3.11.11",
+        "setuptools>=75.6.0",
         "websocket_client>=1.8.0",
     ],
     classifiers=[
