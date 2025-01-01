@@ -28,5 +28,6 @@ errors = {
     "request_failed": "The HTTP request code is {code} with error \"{error}\"",
     "dispy_request_error": "An error occured with dispy during HTTP request: {error}",
     "getting_invalid": "You've tried to get() an invalid result, error of the result: {error}",
-    "invalid_arguments": "You didn't give the argument {arg}!"
+    "invalid_arguments": "You didn't give the argument {arg}!",
+    "invalid_emoji": "The emoji '{emoji_name}' is invalid"
 }

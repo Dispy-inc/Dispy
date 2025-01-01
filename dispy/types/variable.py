@@ -13,14 +13,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from datetime import datetime
 
 class Snowflake(str):
     def __new__(cls, value):
         return str.__new__(cls, value)
 
 class Timestamp(str):
+    _dictwrapper_type = True
     def __new__(cls, value):
-        return str.__new__(cls, value)
+        if value: result = datetime.fromisoformat(str(value)).timestamp()
+        else: result = None
+        return super().__new__(cls, result)
     
 class Invalid(str):
     def __new__(cls, value):

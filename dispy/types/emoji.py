@@ -17,6 +17,7 @@
 from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
+from urllib.parse import quote
 
 from dispy.types.role import Role
 from dispy.types.user import User
@@ -30,3 +31,8 @@ class Emoji(DictWrapper):
     managed: bool
     animated: bool
     available: bool
+    url_encode: str = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.url_encode = quote(f'{self.name}:{self.id}') if self.id else quote(self.name)

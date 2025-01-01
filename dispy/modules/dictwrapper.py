@@ -73,6 +73,8 @@ class DictWrapper:
                     value = self._types[key](**value)
                 else:
                     value = value
+            if key != '_api' and hasattr(self._types[key],'_dictwrapper_type'):
+                value = self._types[key](value)
             setattr(self, key, value)
 
     def __getattr__(self, name):

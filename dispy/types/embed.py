@@ -81,8 +81,8 @@ class EmbedBuilder:
     def setTitle(self, title: str):
         self.args['title'] = title
         return self    
-    def setDescription(self, title: str):
-        self.args['description'] = title
+    def setDescription(self, description: str):
+        self.args['description'] = description
         return self    
     
     class authorObject(TypedDict):

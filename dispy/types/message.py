@@ -18,6 +18,8 @@ from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
 from dispy.modules.rest_api import result
 import asyncio
+import re
+from urllib.parse import quote
 from typing import List, Dict, Any
 
 from dispy.types.user import User
@@ -216,7 +218,7 @@ class Message(DictWrapper):
         asyncio.run_coroutine_threadsafe(_asynchronous(self.channel_id, self.id), self._api._loop)
         return result[None](future,self._api,None)
     
-    def edit(self,content=None, embeds=None, **kwargs):
+    def edit(self,content=None, embeds=None, **kwargs) -> result["Message"]:
         """
         Edit the message.
         You need to be the author of it to edit it.
@@ -248,3 +250,31 @@ class Message(DictWrapper):
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
         return result[Message](future,self._api,Message)
+    
+    def react(self,emoji: str, id: int | str = None) -> result[None]:
+        """
+        Add a reaction to the message.
+
+        You can use unicode emoji like `❤️`, Use `Windows + :` on windows to open the emoji selection menu.
+
+        For custom emoji, you need to put `name:id`, e.g. `blobreach:123456789012345678`. Or you can separate these two by attributing the argument id separatly.
+        """
+        future = self._api._loop.create_future()
+        
+        async def _asynchronous(emoji):
+            # For custom emojis
+            if ':' in emoji or id:
+                if id: emoji = f'{emoji}:{str(id)}'
+                else:
+                    pattern = r"([a-zA-Z]+):(\d+)"
+                    match = re.search(pattern, emoji)
+                    if match: emoji = match.group(0)
+                    else: return self._api._error.summon('invalid_emoji',emoji_name=str(emoji),stop=False)
+            else:
+                emoji = emoji[0]
+            
+            result = await self._api.__request__('put', f'channels/{self.channel_id}/messages/{self.id}/reactions/{quote(emoji)}/@me', {}) # no_traceback
+            future.set_result(result)
+        
+        asyncio.run_coroutine_threadsafe(_asynchronous(emoji), self._api._loop)
+        return result[None](future,self._api,None)
