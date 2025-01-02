@@ -22,8 +22,10 @@ It is recommended to import it with `from dispy import *`
 from dispy.modules.intents import *
 from dispy.modules import *
 from dispy.types.user import User
+from dispy.types.variable import Snowflake
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import error
+from dispy.types.commands import SlashCommandBuilder
 from dispy.modules.eventargs import _eventargs
 from dispy.data import data
 # External
@@ -73,6 +75,8 @@ class Bot(restapi): # <- this shit has taken me hours
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
+
+        self.commands = self._commands(self._handlers,self._eventargs)
         threading.Thread(target=self._run_loop, daemon=True).start()
     def _run_loop(self):
         asyncio.set_event_loop(self._loop)
@@ -117,6 +121,8 @@ class Bot(restapi): # <- this shit has taken me hours
     
         for key, handler in self._handlers:
             if key == eventname:
+                if eventname == 'INTERACTION_CREATE' and handler['type'] == 1:
+                    pass
                 if eventname in self._data.intents.direct_intents_opposed:
                     if handler['is_direct'] and 'guild_id' in args:
                         continue
@@ -232,6 +238,24 @@ class Bot(restapi): # <- this shit has taken me hours
     def _debug(self):
         pass
 
+    class _commands:
+        def __init__(self, handler, eventargs):
+            self.handler = handler
+            self.eventargs = eventargs
+        def link(self, command: SlashCommandBuilder, function: Callable = None, *, guild_id: Snowflake = False):
+            def decorator(fn):
+                if self.eventargs.check_function(fn,'INTERACTION_CREATE'): # no_traceback
+                    self.handler.append(('INTERACTION_CREATE',{
+                        "function": fn,
+                        "type": 1,
+                        "context": guild_id, # False for Global and Guild_id for guild only. Help differentiete the two.
+                        "name": command.args['name'],
+                        "is_direct": False,
+                        "once": False,
+                    }))
+            if function is not None: return decorator(function)
+            else: return decorator
+
     #--------------------------------------------------------------------------------------#
     #                                    Event Handler                                     #
     #--------------------------------------------------------------------------------------#
@@ -255,6 +279,7 @@ class Bot(restapi): # <- this shit has taken me hours
 
                     self._handlers.append((event_name,{
                         "function": fn,
+                        "type": 0,
                         "is_direct": is_direct,
                         "once": once,
                     }))
@@ -302,4 +327,4 @@ from dispy.types.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll,
 typesFunc = ['Message','User', 'Interaction', 'ReactionAdd', 'ReactionRemove', 'ReactionRemoveAll', 'ReactionRemoveEmoji']
 
 # END
-__all__ = ['Bot','EmbedBuilder','Embed','TokenReader'] + typesFunc
+__all__ = ['Bot','EmbedBuilder','SlashCommandBuilder','Embed','TokenReader'] + typesFunc

@@ -22,13 +22,15 @@ from dispy.types.permissions import Overwrite
 from dispy.types.user import User
 from dispy.types.thread import ThreadMetadata, ThreadMember, ForumTag, DefaultReaction
 
+class IconEmoji(DictWrapper):
+    name: str
+    id: Snowflake
 
 class ChannelMention(DictWrapper):
     id: Snowflake
     guild_id: Snowflake
     type: int
     name: str
-
 
 class Channel(DictWrapper):
     id: Snowflake
@@ -44,9 +46,11 @@ class Channel(DictWrapper):
     user_limit: int
     rate_limit_per_user: int
     recipients: List[User]
+    theme_color: str
     icon: str
     owner_id: Snowflake
     application_id: Snowflake
+    icon_emoji: IconEmoji
     managed: bool
     parent_id: Snowflake
     last_pin_timestamp: Timestamp

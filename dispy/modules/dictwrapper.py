@@ -60,8 +60,10 @@ class DictWrapper:
         self._types = get_type_hints(self.__class__)
 
         for key, value in kwargs.items():
-            if key not in self._types and key != '_api' and debug:
-                raise KeyError(f"'{key}' was given but isn't defined in the DictWrapper '{self.__class__.__name__}'.")
+            if key not in self._types and key != '_api':
+                if debug:
+                    raise KeyError(f"'{key}' was given but isn't defined in the DictWrapper '{self.__class__.__name__}': '{value}' of type {str(type(value)).upper()}")
+                else: continue
 
             if '_api' in kwargs:
                 self._api = kwargs['_api']
