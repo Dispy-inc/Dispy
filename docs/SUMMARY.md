@@ -3,8 +3,8 @@
 ## Documentation
 
 * [Getting started](README.md)
-  * [Installation](documentation/getting-started/introduction.md)
-  * [Create a bot](documentation/getting-started/setup-your-bot-on-discord.md)
+  * [Installation](documentation/readme/introduction.md)
+  * [Create a bot](documentation/readme/setup-your-bot-on-discord.md)
 * [Functions](documentation/functions/README.md)
   * [\*](documentation/functions/undefined.md)
   * [Message](documentation/functions/message.md)

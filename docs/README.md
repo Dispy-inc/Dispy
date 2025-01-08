@@ -26,8 +26,8 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 ***
 
 * Getting Started
-  * [**Introduction**](documentation/getting-started/introduction.md): Installation and importation
-  * [**Setup your bot on discord**](documentation/getting-started/setup-your-bot-on-discord.md): Getting your bot token and invite link
+  * [**Introduction**](documentation/readme/introduction.md): Installation and importation
+  * [**Setup your bot on discord**](documentation/readme/setup-your-bot-on-discord.md): Getting your bot token and invite link
 * Contribute
   * [Adding an API function](informations/contribute/adding-an-api-function.md): Learn how to add any missing functions to Dispy
 * Versions ([changelogs](informations/changelogs/))
