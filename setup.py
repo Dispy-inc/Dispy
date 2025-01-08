@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("requirements.txt") as f:
+    required_packages = f.read().splitlines()
+
 setup(
     name='dispy-bot',
     version='0.1.0.6',
@@ -10,11 +13,7 @@ setup(
     author_email='jamesfrench.contact@gmail.com',
     url='https://github.com/JamesMinoucha/Dispy',
     packages=find_packages(),
-    install_requires=[
-        "aiohttp>=3.11.11",
-        "setuptools>=75.6.0",
-        "websocket_client>=1.8.0",
-    ],
+    install_requires=required_packages,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",

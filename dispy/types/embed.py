@@ -117,7 +117,8 @@ class EmbedBuilder:
         'black': 0x000000,
         'brown': 0xA05601,
         'gray': 0xA9A9A9,
-        'white': 0xFFFFFF
+        'white': 0xFFFFFF,
+        'embed-discord': 0x2B2D31
     }
     def setColor(self, color: str | int | _colors):
         """
