@@ -16,11 +16,21 @@
 from datetime import datetime
 
 class Snowflake(str):
+    _dictwrapper_type = True
+
     def __new__(cls, value):
         return str.__new__(cls, value)
 
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return str(self) == other
+        elif isinstance(other, int):
+            return int(self) == other
+        return False
+
 class Timestamp(str):
     _dictwrapper_type = True
+
     def __new__(cls, value):
         if value: result = datetime.fromisoformat(str(value)).timestamp()
         else: result = None
