@@ -104,7 +104,7 @@ class EmbedBuilder:
         self.args['timestamp'] = timestamp
         return self
     
-    _colors = Literal['blue','violet','pink','red','orange','yellow','green','black','brown','gray','white']
+    _colors = Literal['blue','violet','pink','red','orange','yellow','green','black','brown','gray','white','embed-discord']
     global _color_palette
     _color_palette = {
         'blue': 0x3983F2,
