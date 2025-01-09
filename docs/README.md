@@ -1,5 +1,5 @@
 ---
-icon: radar
+icon: code-pull-request
 layout:
   title:
     visible: true
@@ -13,27 +13,26 @@ layout:
     visible: false
 ---
 
-# Getting started
+# Contribute
 
 ***
 
-**Dispy** is a Python library that simplifies Discord bot development by handling all the complexities of asynchronous programming and API interactions. Unlike discord.py and discord.js, Dispy allows users to write straightforward Python code without worrying about intents, event loops, or async functions. The library runs everything asynchronously in the background, ensuring high performance without requiring the developer to manage any of it.
+This category is made to explain how to add functionalities to Dispy so you don't code blind.
 
-Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
+### How to make a Pull Request?
 
-## Summary
+1. Fork the [repository](https://github.com/Dispy-inc/Dispy).
+2. Create a branch (`git checkout -b featureName`) with an unique name.
+3. Commit your Changes (`git commit -m "description"`)
+4. Push to the Branch (`git push origin featureName`)
+5. Open a pull request.
 
-***
+If this doesn't help you, this [video](https://www.youtube.com/watch?v=8A4TsoXJOs8) might.
 
-* Getting Started
-  * [**Introduction**](documentation/readme/introduction.md): Installation and importation
-  * [**Setup your bot on discord**](documentation/readme/setup-your-bot-on-discord.md): Getting your bot token and invite link
-* Contribute
-  * [Adding an API function](informations/contribute/adding-an-api-function.md): Learn how to add any missing functions to Dispy
-* Versions ([changelogs](informations/changelogs/))
-  * [0.1.0.7](informations/changelogs/0.1.0.7.md) (Work in progress)
-  * [0.1.0.6](informations/changelogs/0.1.0.6.md)
-  * [0.1.0.5](informations/changelogs/0.1.0.5.md)
-  * [0.1.0](informations/changelogs/0.1.0.md)
-  * [0.0.1](informations/changelogs/0.0.1.md)
-* [Roadmap](informations/roadmap.md): See the progression of Dispy
+### Articles
+
+There is 1 article at the moment, more will be added.
+
+{% content-ref url="informations/contribute/adding-an-api-function.md" %}
+[adding-an-api-function.md](informations/contribute/adding-an-api-function.md)
+{% endcontent-ref %}

@@ -29,27 +29,27 @@ A video tutorial will soon be done to help beginner.
 
 {% stepper %}
 {% step %}
-### Go into your [discord developer portal](https://discord.com/developers/applications)
+#### Go into your [discord developer portal](https://discord.com/developers/applications)
 
 Login if needed.
 {% endstep %}
 
 {% step %}
-### Create your application
+#### Create your application
 
 Click **"New Application"** on the discord developer portal and name your application (it will **not** be used as the bot name).
 {% endstep %}
 
 {% step %}
-### Define your bot
+#### Define your bot
 
 Go into the **"Bot"** section on your left, in here, you can change the profil picture and username of your bot.
 {% endstep %}
 
 {% step %}
-### Give it the right to read messages
+#### Give it the right to read messages
 
-Before you continue, you need to give your bot the ability to do some things, go down a little bit until you see the **"Privileged Gateway Intents"** category (Just before bot permissions).&#x20;
+Before you continue, you need to give your bot the ability to do some things, go down a little bit until you see the **"Privileged Gateway Intents"** category (Just before bot permissions).
 
 You need to check the 3 options ("Presence Intent", "Server Members Intent" and "Message Content Intent").
 
@@ -59,7 +59,7 @@ _**Warning:** If your bot is added on more that 100 servers, you will not be abl
 {% endstep %}
 
 {% step %}
-### Get your token!
+#### Get your token!
 
 To make the bot do things and be aware of things happening, you need to have his token. You can simply get it by resetting it in the **"Bot"** section (The **"Reset Token"** button).
 
@@ -67,7 +67,7 @@ _**Warning:** Your token is like your social security number (Not at this point 
 {% endstep %}
 
 {% step %}
-### Invite your bot on your server
+#### Invite your bot on your server
 
 Next, go into the **"0Auth2"** section on your left (right above the bot section).
 
@@ -81,7 +81,7 @@ Now, at the bottom, there is a **"Generated URL"** field containing the URL you 
 {% endstep %}
 
 {% step %}
-### And you're done!
+#### And you're done!
 
 Congrat! Your bot is ready to go!
 
