@@ -45,7 +45,7 @@ This category is not very interesting for developer
 * [ ] Auto-connect & Exception ignore (for linux machine)
 * [ ] Logging
 
-> `^` mean it is ready and coded into dispy but isn't complete. [Contribute](../) to finish it!
+> `^` mean it is ready and coded into dispy but isn't complete. [Contribute](contribute/) to finish it!
 >
 > `~` mean it is experimental and may be changed. (This can mean `^` too)
 

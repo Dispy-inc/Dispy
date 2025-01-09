@@ -1,20 +1,8 @@
 # Table of contents
 
-## Informations
-
-* [Contribute](README.md)
-  * [Adding an API function](informations/contribute/adding-an-api-function.md)
-* [Changelogs](informations/changelogs/README.md)
-  * [0.1.0.7](informations/changelogs/0.1.0.7.md)
-  * [0.1.0.6](informations/changelogs/0.1.0.6.md)
-  * [0.1.0.5](informations/changelogs/0.1.0.5.md)
-  * [0.1.0](informations/changelogs/0.1.0.md)
-  * [0.0.1](informations/changelogs/0.0.1.md)
-* [Roadmap](informations/roadmap.md)
-
 ## Documentation
 
-* [Getting started](<README (1).md>)
+* [Getting started](README.md)
   * [Installation](documentation/readme/introduction.md)
   * [Create a bot](documentation/readme/setup-your-bot-on-discord.md)
 * [Functions](documentation/functions/README.md)
@@ -27,12 +15,12 @@
 
 ## Informations
 
-* [Contribute](informations-1/contribute/README.md)
-  * [Adding an API function](informations-1/contribute/adding-an-api-function.md)
-* [Changelogs](informations-1/changelogs/README.md)
-  * [0.1.0.7](informations-1/changelogs/0.1.0.7.md)
-  * [0.1.0.6](informations-1/changelogs/0.1.0.6.md)
-  * [0.1.0.5](informations-1/changelogs/0.1.0.5.md)
-  * [0.1.0](informations-1/changelogs/0.1.0.md)
-  * [0.0.1](informations-1/changelogs/0.0.1.md)
-* [Roadmap](informations-1/roadmap.md)
+* [Contribute](informations/contribute/README.md)
+  * [Adding an API function](informations/contribute/adding-an-api-function.md)
+* [Changelogs](informations/changelogs/README.md)
+  * [0.1.0.7](informations/changelogs/0.1.0.7.md)
+  * [0.1.0.6](informations/changelogs/0.1.0.6.md)
+  * [0.1.0.5](informations/changelogs/0.1.0.5.md)
+  * [0.1.0](informations/changelogs/0.1.0.md)
+  * [0.0.1](informations/changelogs/0.0.1.md)
+* [Roadmap](informations/roadmap.md)
