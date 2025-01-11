@@ -22,7 +22,7 @@ If you don't know how to make a pull request (Demand to change the code), you ma
 
 {% stepper %}
 {% step %}
-### Research
+#### Research
 
 Before you code a new function for Dispy, you need to know exactly how to do it.
 
@@ -30,7 +30,7 @@ In the [documentation](https://discord.com/developers/docs/intro) of discord, yo
 {% endstep %}
 
 {% step %}
-### Amount
+#### Amount
 
 In Dispy, your function can be in multiple place, e.g. to create a message:
 
@@ -42,7 +42,7 @@ An API function need to be present on types that has the necessary informations 
 {% endstep %}
 
 {% step %}
-### Where
+#### Where
 
 The API function for the bot object are located in **dispy.modules.**_**rest\_api.py**_.
 
@@ -50,7 +50,7 @@ For an object (e.g. Message), they are located in **dispy.types** and the file w
 {% endstep %}
 
 {% step %}
-### Introduction
+#### Introduction
 
 If the object doesn't have the `_api = None` argument, you need to add it at the end of all the type definition. With this you can call the \_\_request\_\_ object.
 
@@ -63,7 +63,7 @@ import asyncio
 {% endstep %}
 
 {% step %}
-### Create the Function
+#### Create the Function
 
 When creating a function, you need to follow some rules to be sure your pull request will be accepted.
 
@@ -95,7 +95,7 @@ def function(self, argument=None, **kwargs) -> result[<Type>]:
     return result[<Type>](future,self._api,<Type>)
 ```
 
-#### What's to change in the template
+**What's to change in the template**
 
 1. There is 3 `<Type>` to replace with the return type object, you can put 'None'.
 2. You need to change `<method>` to the method used in the API request, e.g. Post, patch, delete.
