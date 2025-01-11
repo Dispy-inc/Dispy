@@ -16,7 +16,7 @@
 
 from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
-from dispy.modules.rest_api import result
+from dispy.modules.result import result
 import asyncio
 import re
 from urllib.parse import quote
@@ -119,6 +119,15 @@ class Message(DictWrapper):
     poll: Poll
     call: MessageCall
     _api = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.member and self.guild_id:
+            self.member.guild_id = self.guild_id
+        if self.author and self.guild_id:
+            self.author.guild_id = self.guild_id
+        if self.author.id and self.member:
+            self.member.user = User(id = self.author.id)
 
     # Message
     def reply(self,content=None, embeds=None, **kwargs) -> result["Message"]:

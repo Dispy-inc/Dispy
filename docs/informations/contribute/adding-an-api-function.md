@@ -57,7 +57,7 @@ If the object doesn't have the `_api = None` argument, you need to add it at the
 You need to import these two thing (if they are not already imported):
 
 ```python
-from dispy.modules.rest_api import result
+from dispy.modules.result import result
 import asyncio
 ```
 {% endstep %}

@@ -21,6 +21,7 @@ import threading
 from dispy.modules import dict_to_obj
 from dispy.types.embed import EmbedBuilder
 from dispy.types.variable import Invalid
+from dispy.modules.result import result
 from typing import Generic, TypeVar, Type
 
 # 888888ba  oo                               
@@ -35,45 +36,9 @@ from typing import Generic, TypeVar, Type
 # Developed by ✯James French✯ with ❤
 # Licensed with GPLv3
 
-T = TypeVar('T')
-
-class result(Generic[T]):
-    """
-    Represent the response of the request you've done.
-    Use .get() to get variables, this will pause the execution of your code until the response is given.
-    """
-    def __init__(self, future: asyncio.Future[T], api, cls: Type[T] = None):
-        self.future = future
-        self.api = api
-        self.loop = self.api._loop
-        self._cls = cls
-    
-    def get(self) -> T:
-        """
-        Will block the code execution until response is given.
-        """
-        if not isinstance(self.future,Invalid):
-            async def asynchronous() -> T:
-                return await self.future
-            
-            future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self.loop)
-            result = future_result.result(timeout=7)
-        else:
-            self.api._error.summon("getting_invalid",stop=False,error=self.future)
-            return None
-        
-        if isinstance(result,Invalid):
-            self.api._error.summon("getting_invalid",stop=False,error=result)
-            return None
-        else:
-            return self._cls(**result, _api=self.api) if hasattr(self._cls,'_api') else self._cls(**result)
-
-
-
-
 from dispy.types.message import Message
 
-class __internal__(Generic[T]):
+class __internal__():
     def  __init__(self,token,error_handler) -> None:
         self._token = token
         self._header = {
@@ -103,7 +68,10 @@ class __internal__(Generic[T]):
                     else:
                         if response.status != 204:
                             response_data = await response.json()
-                            return dict_to_obj(response_data)
+                            if isinstance(response_data, dict):
+                                return dict_to_obj(response_data)
+                            elif isinstance(response_data, list):
+                                return [dict_to_obj(item) for item in response_data]
                         else:
                             return None
             except Exception as err:

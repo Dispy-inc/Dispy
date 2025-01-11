@@ -25,7 +25,7 @@ from dispy.types.user import User
 from dispy.types.variable import Snowflake
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import error
-from dispy.types.commands import SlashCommandBuilder
+from dispy.types.command import SlashCommandBuilder
 from dispy.modules.eventargs import _eventargs
 from dispy.data import data
 # External
@@ -64,6 +64,7 @@ class Bot(restapi): # <- this shit has taken me hours
         self.status = 0
 
         self._token = token
+        self._registered_commands = []
         self._error = error()
         self._heartbeat_interval = None
         self._handlers = []
@@ -76,7 +77,7 @@ class Bot(restapi): # <- this shit has taken me hours
         self._executor = ThreadPoolExecutor()
         self._tasks = []
 
-        self.commands = self._commands(self._handlers,self._eventargs)
+        self.commands = self._commands(self._handlers,self._eventargs,self._registered_commands)
         threading.Thread(target=self._run_loop, daemon=True).start()
     def _run_loop(self):
         asyncio.set_event_loop(self._loop)
@@ -109,6 +110,8 @@ class Bot(restapi): # <- this shit has taken me hours
                 if data['t'] != None:
                     if data['t'] == "READY":
                         self.user = User(**data['d']['user'])
+                        if len(self._registered_commands) > 0:
+                            asyncio.run_coroutine_threadsafe(self._api.__request__('put',f'applications/{data['d']['user']['id']}/commands',payload=self._registered_commands), self._loop)
                     asyncio.create_task(self._sendevent(data['t'],data['d']))
 
     # Used to call functions when a event is dispatched
@@ -239,12 +242,14 @@ class Bot(restapi): # <- this shit has taken me hours
         pass
 
     class _commands:
-        def __init__(self, handler, eventargs):
+        def __init__(self, handler, eventargs, commands):
             self.handler = handler
             self.eventargs = eventargs
+            self.commands = commands
         def link(self, command: SlashCommandBuilder, function: Callable = None, *, guild_id: Snowflake = False):
             def decorator(fn):
                 if self.eventargs.check_function(fn,'INTERACTION_CREATE'): # no_traceback
+                    self.commands.append(command.get())
                     self.handler.append(('INTERACTION_CREATE',{
                         "function": fn,
                         "type": 1,

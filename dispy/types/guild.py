@@ -17,6 +17,8 @@
 from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
+from dispy.modules.result import result
+import asyncio
 
 from dispy.types.role import Role
 from dispy.types.emoji import Emoji
@@ -51,6 +53,25 @@ class Member(DictWrapper):
     communication_disabled_until: Timestamp
     avatar_decoration_data: AvatarDecorationData
     unusual_dm_activity_until: Timestamp
+    guild_id: Snowflake = None
+    _api = None
+
+    def kick(self, guild_id: Snowflake = None) -> result[None]:
+        """
+        Kick the member.
+
+        In some cases, you will need to pass the argument `guild_id`.
+        """
+        future = self._api._loop.create_future()
+        
+        async def _asynchronous(guild_id):
+            if guild_id == None:
+                guild_id = self.guild_id
+            result = await self._api.__request__('delete', f'guilds/{guild_id}/members/{self.user.id}') # no_traceback
+            future.set_result(result)
+        
+        asyncio.run_coroutine_threadsafe(_asynchronous(guild_id), self._api._loop)
+        return result[None](future,self._api,None)
 
 class Guild(DictWrapper):
     id: Snowflake

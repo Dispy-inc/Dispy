@@ -18,7 +18,7 @@ from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 import asyncio
-from dispy.modules.rest_api import result
+from dispy.modules.result import result
 
 from dispy.types.emoji import Emoji
 from dispy.types.guild import Member
