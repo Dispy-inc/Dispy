@@ -16,6 +16,11 @@
 
 # <p align="center"></p>
 
+<div align="center">
+  
+  [Documentation](https://dispy.gitbook.io/docs) | [Pypi](https://pypi.org/project/dispy-bot) | [Discord Server](https://discord.gg/NXDsZpqJjT) | [Versions](https://dispy.gitbook.io/docs/informations/changelogs)
+</div>
+  
 **Dispy** is a Python library that simplifies Discord bot development by handling all the complexities of asynchronous programming and API interactions. Unlike discord.py and discord.js, Dispy allows users to write straightforward Python code without worrying about intents, event loops, or async functions. The library runs everything asynchronously in the background, ensuring high performance without requiring the developer to manage any of it.
 
 Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
@@ -25,11 +30,6 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [Asyncio](https://docs.python.org/fr/3/library/asyncio.html)
 - [AioHttp](https://docs.aiohttp.org/en/stable/)
 - [Discord API](https://discord.com/developers/docs/intro#explore-the-apis)
-
-### Links
-- [Documentation](https://jamesfrench.gitbook.io/dispy)
-- [Discord Server](https://discord.gg/z53TEUwZaE)
-
 
 ## <div align="center">Roadmap</div>
 **Current Stat:** Beta</br>
@@ -87,6 +87,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+## <div align="center">Getting started</div>
+
+Install dispy with pip (`pip install dispy-bot`) and get started on using it with:
+- [Setup your first bot](https://dispy.gitbook.io/docs/documentation/readme/setup-your-bot-on-discord)
+- [Example code](https://dispy.gitbook.io/docs/documentation/wiki/ready-print)
 
 ## <div align="center">Contact Us</div>
 
