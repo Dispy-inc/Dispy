@@ -37,6 +37,7 @@ import threading
 import time
 from warnings import deprecated
 import asyncio
+import os
 
 # 888888ba  oo                               
 # 88    `8b ``                               
@@ -63,19 +64,23 @@ class Bot(restapi): # <- this shit has taken me hours
         self.user: User = None
         self.status = 0
 
-        self._token = token
+        self.__token = token
         self._registered_commands = []
+        self._cachefile = os.path.expanduser('~/.dispy')
         self._error = error()
         self._heartbeat_interval = None
         self._handlers = []
         self._session: aiohttp.ClientSession = None
         self._ws = None
-        self._api = restapi(self._token,self._error)
+        self._api = restapi(self.__token,self._error)
         self._data = data()
         self._eventargs = _eventargs(self._data.intents,self._error)
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
+
+        if self._cachefile.startswith('/root'):
+            self._cachefile = None
 
         self.commands = self._commands(self._handlers,self._eventargs,self._registered_commands)
         threading.Thread(target=self._run_loop, daemon=True).start()
@@ -88,7 +93,7 @@ class Bot(restapi): # <- this shit has taken me hours
 
     def config(self,token=None):
         if self.status != 0: return None
-        if token != None: self._token = token
+        if token != None: self.__token = token
 
     #--------------------------------------------------------------------------------------#
     #                                    Internal Code                                     #
@@ -152,7 +157,7 @@ class Bot(restapi): # <- this shit has taken me hours
         payload = {
             'op': 2,
             'd': {
-                'token': self._token,
+                'token': self.__token,
                 'intents': self._intents(),
                 'properties': {
                     'os': 'linux',
@@ -161,6 +166,7 @@ class Bot(restapi): # <- this shit has taken me hours
                 }
             }
         }
+        self.__token = None
         await self._ws.send_json(payload)
 
     # Send heartbeat to discord to keep the bot alive

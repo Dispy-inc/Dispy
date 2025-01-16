@@ -40,17 +40,17 @@ from dispy.types.message import Message
 
 class __internal__():
     def  __init__(self,token,error_handler) -> None:
-        self._token = token
-        self._header = {
-            'authorization': f'Bot {self._token}',
+        self.__token = token
+        self.__header = {
+            'authorization': f'Bot {self.__token}',
             'content-type': 'application/json'
         }
         self._loop = asyncio.new_event_loop()
         self._base_url = 'https://discord.com/api/v10/'
         self._api = self
         self._error = error_handler
-        threading.Thread(target=self.run_loop, daemon=True).start()
-    def run_loop(self):
+        threading.Thread(target=self._run_loop, daemon=True).start()
+    def _run_loop(self):
         asyncio.set_event_loop(self._loop)
         self._loop.run_forever() # no_traceback
 
@@ -60,7 +60,7 @@ class __internal__():
             args['json'] = payload
         async with aiohttp.ClientSession() as session:
             try:
-                async with getattr(session, function)(f'{self._base_url}{path}', headers=self._header, **args) as response:
+                async with getattr(session, function)(f'{self._base_url}{path}', headers=self.__header, **args) as response:
                     if response.status not in [200, 204]:
                         error = json.loads(await response.text())
                         self._error.summon("request_failed",stop=False,code=response.status,error=error["message"])
