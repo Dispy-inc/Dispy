@@ -1,5 +1,5 @@
 # Dispy - Python Discord API library for discord bots.
-# Copyright (C) 2024  James French
+# Copyright (C) 2025  James French
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

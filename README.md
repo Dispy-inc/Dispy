@@ -1,12 +1,12 @@
 <div align="center">
-  <img src="https://jamesfrench.fr/dispy/logo_horizon.png" width="250">
+  <img src="https://assets.jamesfrench.fr/dispy.png" width="250">
   </br></br>
   With the power of asynchronous and without its complexity.
   </br>
   <strong>Discord Bot Library</strong>
   </br></br>
   
-  [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.fr.html)
+  [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.en.html)
   ![PyPI - Downloads](https://img.shields.io/pypi/dm/dispy-bot)
   ![Made with Heart](https://img.shields.io/badge/Made_with-%F0%9F%A4%8D-green)
   </br>
@@ -24,6 +24,8 @@
 **Dispy** is a Python library that simplifies Discord bot development by handling all the complexities of asynchronous programming and API interactions. Unlike discord.py and discord.js, Dispy allows users to write straightforward Python code without worrying about intents, event loops, or async functions. The library runs everything asynchronously in the background, ensuring high performance without requiring the developer to manage any of it.
 
 Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
+
+[readme-modification]: <> (Fixed an issue with the logo, changed the email, added roadmap items)
 
 ### Built With
 - [Python](https://www.python.org/)
@@ -54,6 +56,8 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 - [x] Asynchronous
   - [x] Hidden
   - [x] A way of awaiting output
+  - [ ] Multiple bots support
+- [ ] Self-bot
 - [ ] Sharding Handler
 - [ ] Auto-connect & Exception ignore (for linux machine)
 - [ ] Logging
@@ -73,7 +77,7 @@ Thanks!
 ## <div align="center">License</div>
 
 Dispy - Python Discord API library for discord bots.</br>
-Copyright (C) 2024  James French
+Copyright (C) 2025  James French
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -97,5 +101,5 @@ Install dispy with pip (`pip install dispy-bot`) and get started on using it wit
 ## <div align="center">Contact Us</div>
 
 If you have any questions or suggestions, feel free to reach out to me:
-- Email: **jamesfrench.contact@gmail.com**
+- Email: **[contact@jamesfrench.fr](mailto:contact@jamesfrench.fr)**
 - Discord: **Jamesfrench_**

@@ -58,7 +58,7 @@ Users are entirely responsible for their actions and behavior, and the developer
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-jamesfrench.contact@gmail.com.
+contact@jamesfrench.fr.
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
