@@ -35,7 +35,7 @@ import aiohttp # Need to be installed (with websocket_client)
 import json
 import threading
 import time
-from warnings import deprecated
+import inspect
 import asyncio
 import os
 
@@ -55,7 +55,7 @@ class Bot(restapi): # <- this shit has taken me hours
     #--------------------------------------------------------------------------------------#
     #                                      Bot Setup                                       #
     #--------------------------------------------------------------------------------------# 
-    def __init__(self,token=None):
+    def __init__(self, token=None):
         """
         Define your bot.
 
@@ -63,8 +63,9 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         self.user: User = None
         self.status = 0
+        self.token = token
 
-        self.__token = token
+        self._is_in_class = self.__class__ is not Bot
         self._registered_commands = []
         self._cachefile = os.path.expanduser('~/.dispy')
         self._error = error()
@@ -72,7 +73,7 @@ class Bot(restapi): # <- this shit has taken me hours
         self._handlers = []
         self._session: aiohttp.ClientSession = None
         self._ws = None
-        self._api = restapi(self.__token,self._error)
+        self._api = restapi(self.token,self._error)
         self._data = data()
         self._eventargs = _eventargs(self._data.intents,self._error)
         self._loop = asyncio.new_event_loop()
@@ -93,7 +94,7 @@ class Bot(restapi): # <- this shit has taken me hours
 
     def config(self,token=None):
         if self.status != 0: return None
-        if token != None: self.__token = token
+        if token != None: self.token = token
 
     #--------------------------------------------------------------------------------------#
     #                                    Internal Code                                     #
@@ -157,8 +158,7 @@ class Bot(restapi): # <- this shit has taken me hours
         payload = {
             'op': 2,
             'd': {
-                'token': self.__token,
-                'intents': self._intents(),
+                'token': self.token,
                 'properties': {
                     'os': 'linux',
                     'browser': 'dispy-lib',
@@ -166,7 +166,9 @@ class Bot(restapi): # <- this shit has taken me hours
                 }
             }
         }
-        self.__token = None
+        if not self._self_bot:
+            payload['d'].update({'intents': self._intents()})
+        self.token = None
         await self._ws.send_json(payload)
 
     # Send heartbeat to discord to keep the bot alive
@@ -284,7 +286,7 @@ class Bot(restapi): # <- this shit has taken me hours
             if eventname is None: event_name = fn.__name__.upper()
             else: event_name = eventname.upper()
             if event_name in self._data.intents.intents:
-                if self._eventargs.check_function(fn,event_name): # no_traceback
+                if self._eventargs.check_function(fn,event_name,self._is_in_class): # no_traceback
                     is_direct = event_name in self._data.intents.direct_intents
                     event_name = event_name[7:] if is_direct else event_name
 
@@ -321,8 +323,6 @@ def TokenReader(filename: str) -> str:
     except Exception as e:
         raise ReferenceError(f"File '{filename}' cannot be read by TokenReader() with error {e}.")
 
-# I keep this to support old version
-@deprecated('This function is deprecated, use EmbedBuilder instead!')
 def Embed(**kwargs):
     content = {}
     content.update(kwargs)

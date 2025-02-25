@@ -40,9 +40,9 @@ from dispy.types.message import Message
 
 class __internal__():
     def  __init__(self,token,error_handler) -> None:
-        self.__token = token
+        self.token = token
         self.__header = {
-            'authorization': f'Bot {self.__token}',
+            'authorization': f'Bot {self.token}',
             'content-type': 'application/json'
         }
         self._loop = asyncio.new_event_loop()

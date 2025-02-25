@@ -83,9 +83,13 @@ class _eventargs:
         else:
             return {'args': Any}
 
-    def check_function(self,function,eventname):
+    def check_function(self,function,eventname,is_class):
         code = function.__code__
         function_arguments = list(code.co_varnames[:code.co_argcount])
+
+        if is_class and 'self' in function_arguments:
+            function_arguments.remove('self')
+
         type_hints = get_type_hints(function)
         current_types = {arg: type_hints.get(arg,Null) for arg in function_arguments}
         needed_type = self.get(eventname)

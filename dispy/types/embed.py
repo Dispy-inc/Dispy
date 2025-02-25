@@ -104,7 +104,7 @@ class EmbedBuilder:
         self.args['timestamp'] = timestamp
         return self
     
-    _colors = Literal['blue','violet','pink','red','orange','yellow','green','black','brown','gray','white','embed-discord']
+    _colors = Literal['blue','violet','pink','red','orange','yellow','green','black','brown','gray','white']
     global _color_palette
     _color_palette = {
         'blue': 0x3983F2,
@@ -118,7 +118,7 @@ class EmbedBuilder:
         'brown': 0xA05601,
         'gray': 0xA9A9A9,
         'white': 0xFFFFFF,
-        'embed-discord': 0x2B2D31
+        #'embed-discord': 0x2B2D31 No more embed color, discord has changed design and they added so many cool colors that there is not enough consistent to keep it.
     }
     def setColor(self, color: str | int | _colors):
         """
