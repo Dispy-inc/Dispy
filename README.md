@@ -57,7 +57,6 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
   - [x] Hidden
   - [x] A way of awaiting output
   - [ ] Multiple bots support
-- [ ] Self-bot
 - [ ] Sharding Handler
 - [ ] Auto-connect & Exception ignore (for linux machine)
 - [ ] Logging
