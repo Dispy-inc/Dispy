@@ -21,6 +21,8 @@ This category is made to explain how to add functionalities to Dispy so you don'
 
 ### How to make a Pull Request?
 
+Before doing some modifications, I really recommend you to make an issue on the github talking about the modifications you wanna make. (to not waste your time)
+
 1. Fork the [repository](https://github.com/Dispy-inc/Dispy).
 2. Create a branch (`git checkout -b featureName`) with an unique name.
 3. Commit your Changes (`git commit -m "description"`)

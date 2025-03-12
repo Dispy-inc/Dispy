@@ -5,6 +5,7 @@
 * [Getting started](README.md)
   * [Installation](documentation/readme/introduction.md)
   * [Create a bot](documentation/readme/setup-your-bot-on-discord.md)
+* [Support](documentation/support.md)
 * [Functions](documentation/functions/README.md)
   * [\*](documentation/functions/undefined.md)
   * [Message](documentation/functions/message.md)

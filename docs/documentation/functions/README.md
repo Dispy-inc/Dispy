@@ -1,4 +1,5 @@
 ---
+hidden: true
 icon: line-height
 layout:
   title:

@@ -23,10 +23,6 @@ In this guide, you will be explained how to register you bot to discord and invi
 You can completly skip this part if you've already taken the token of the bot and invite it to the server.
 {% endhint %}
 
-{% hint style="info" %}
-A video tutorial will soon be done to help beginner.
-{% endhint %}
-
 {% stepper %}
 {% step %}
 #### Go into your [discord developer portal](https://discord.com/developers/applications)

@@ -24,7 +24,7 @@ This page is under construction!
 Print when the bot is online on discord. Don't forgot to replace 'your\_token' with your actual token.
 
 ```python
-from dispy import *
+from dispy import Bot
 
 token = 'your_token'
 bot = Bot(token)
