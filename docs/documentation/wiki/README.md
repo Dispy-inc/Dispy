@@ -1,4 +1,5 @@
 ---
+hidden: true
 icon: golf-flag-hole
 layout:
   title:

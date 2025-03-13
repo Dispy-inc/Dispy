@@ -1,4 +1,5 @@
 ---
+hidden: true
 icon: calculator-simple
 layout:
   title:
@@ -49,7 +50,7 @@ def message_create(msg: Message, user: User):
     # Do something
 ```
 
-_We don't speak about the shit way (`bot.on(function=message_create)`)._&#x20;
+_We don't speak about the shit way (`bot.on(function=message_create)`)._
 
 ### Small detail
 
