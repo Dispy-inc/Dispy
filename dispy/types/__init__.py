@@ -16,3 +16,4 @@
 
 from dispy.types.t.user import User
 from dispy.types.t.message import Message
+from dispy.types.t.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
