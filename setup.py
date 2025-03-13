@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
 
 setup(
     name='dispy-bot',
-    version='0.1.0.6',
+    version='0.1.0.7',
     description='A python-coded discord bot library.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

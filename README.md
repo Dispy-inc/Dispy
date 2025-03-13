@@ -33,7 +33,7 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 
 ## <div align="center">Roadmap</div>
 **Current Stat:** Beta</br>
-**Current Version:** 0.1.0.6</br>
+**Current Version:** 0.1.0.7</br>
 **Current Stability:** Stable</br>
 
 - [x] Gateway & Events
