@@ -13,33 +13,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from datetime import datetime
 
-class Snowflake(str):
-    _dictwrapper_type = True
+from dispy.modules.dictwrapper import DictWrapper
+from dispy.types.t.variable import Snowflake, Timestamp
+from typing import List, Dict, Any
 
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-
-    def __eq__(self, other):
-        if isinstance(other, str):
-            return str(self) == other
-        elif isinstance(other, int):
-            return int(self) == other
-        return False
-
-class Timestamp(str):
-    _dictwrapper_type = True
-
-    def __new__(cls, value):
-        if value: result = datetime.fromisoformat(str(value)).timestamp()
-        else: result = None
-        return super().__new__(cls, result)
-    
-class Invalid(str):
-    def __new__(cls, value):
-        return str.__new__(cls, value)
-    
-class Null(str):
-    def __init__(self):
-        pass
+class Entitlement(DictWrapper):
+    id: Snowflake
+    sku_id: Snowflake
+    application_id: Snowflake
+    user_id: Snowflake
+    type: int
+    deleted: bool
+    starts_at: Timestamp
+    ends_at: Timestamp
+    guild_id: Snowflake
+    consumed: bool

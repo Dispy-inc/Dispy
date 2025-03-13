@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 from dispy.modules.result import result
 import asyncio
@@ -75,3 +75,5 @@ class User(DictWrapper):
         
         asyncio.run_coroutine_threadsafe(_asynchronous(guild_id), self._api._loop)
         return result[None](future,self._api,None)
+    
+__all__ = ["User"]

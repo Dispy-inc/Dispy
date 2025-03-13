@@ -19,8 +19,8 @@ import asyncio
 import json
 import threading
 from dispy.modules import dict_to_obj
-from dispy.types.embed import EmbedBuilder
-from dispy.types.variable import Invalid
+from dispy.types.t.embed import EmbedBuilder
+from dispy.types.t.variable import Invalid
 from dispy.modules.result import result
 from typing import Generic, TypeVar, Type
 
@@ -36,7 +36,7 @@ from typing import Generic, TypeVar, Type
 # Developed by ✯James French✯ with ❤
 # Licensed with GPLv3
 
-from dispy.types.message import Message
+from dispy.types.t.message import Message
 
 class __internal__():
     def  __init__(self,token,error_handler) -> None:

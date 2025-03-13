@@ -17,11 +17,11 @@
 # This file is used to attribute arguments to a eventname
 # For example, when a message is send, we give the message and the author object separatly.
 
-from dispy.types.message import Message
-from dispy.types.interaction import Interaction
-from dispy.types.user import User
-from dispy.types.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
-from dispy.types.variable import Null
+from dispy.types.t.message import Message
+from dispy.types.t.interaction import Interaction
+from dispy.types.t.user import User
+from dispy.types.t.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
+from dispy.types.t.variable import Null
 from typing import Any, get_type_hints
 
 from dispy.modules import dict_to_obj

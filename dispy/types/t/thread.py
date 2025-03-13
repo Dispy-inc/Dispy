@@ -15,32 +15,33 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-from dispy.types.emoji import Emoji
+from dispy.types.t.guild import Member
 
-class PollMedia(DictWrapper):
-    text: str
-    emoji: Emoji
+class ThreadMember(DictWrapper):
+    id: Snowflake
+    user_id: Snowflake
+    join_timestamp: Timestamp
+    flags: int
+    member: Member
 
-class PollAnswer(DictWrapper):
-    answer_id: int
-    poll_media: PollMedia
+class ThreadMetadata(DictWrapper):
+    archived: bool
+    auto_archive_duration: int
+    archive_timestamp: Timestamp
+    locked: bool
+    invitable: bool
+    create_timestamp: Timestamp
 
-class PollAnswerCount(DictWrapper):
-    id: int
-    count: int
-    me_voted: bool
+class ForumTag(DictWrapper):
+    id: Snowflake
+    name: str
+    moderated: bool
+    emoji_id: Snowflake
+    emoji_name: str
 
-class PollResults(DictWrapper):
-    is_finalized: bool
-    answer_counts: List[PollAnswerCount]
-
-class Poll(DictWrapper):
-    question: PollMedia
-    answers: List[PollAnswer]
-    expiry: Timestamp
-    allow_multiselect: bool
-    layout_type: int
-    results: PollResults
+class DefaultReaction(DictWrapper):
+    emoji_id: Snowflake
+    emoji_name: str

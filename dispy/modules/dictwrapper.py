@@ -20,35 +20,9 @@ import json
 
 
 # This variable is only On for debugging purposes and to see if there is missing args, need to be Off for normal uses.
-debug = True
+debug = False
 
 class DictWrapper:
-    """
-    DictWrapper is a tool used by Dispy made to replace TypedDict, basemodel from pydantic and dataclass. It is made to have only the pros of theses three.
-
-    ### Functionalities
-    - Take Dict as input (Pydantic & dataclass)
-    - Support self-referencing (TypedDict)
-    - Get by obj (Pydantic & dataclass)
-    """
-    #This function is needed to .dumps a text inside DictWrapper, but i removed it because it is monkey patching
-    #and this is a programming crime. If you know how or want to fix this problem, contribute to dispy!
-    #
-    #def _jsonSupport():
-    #    original_default = json.JSONEncoder.default
-    #    original_decoder = json.JSONDecoder().object_hook
-    #    def default(self, obj):
-    #        if isinstance(obj, DictWrapper):
-    #            return {'type': 'DictWrapper', 'name': obj.to_dict()}
-    #        return original_default(self, obj)
-    #    def object_hook(obj):
-    #        if 'type' in obj and obj['type'] == 'DictWrapper':
-    #            return DictWrapper.from_dict(obj['name'])
-    #        return obj if original_decoder is None else original_decoder(obj)
-    #    json.JSONEncoder.default = default
-    #    json._default_decoder = json.JSONDecoder(object_hook=object_hook)
-    #_jsonSupport()
-
     _dictwrapper = True
     _api = None
     _types = None
@@ -88,25 +62,40 @@ class DictWrapper:
         if hasattr(self, item):
             value = getattr(self, item)
             if isinstance(value, DictWrapper):
-                return value.to_dict()
+                return value._getdict()
             return value
         raise KeyError(f"'{item}' not found in '{self.__class__.__name__}'")
     
-    def to_dict(self):
+    def getDict(self, getNoneValues=False) -> dict:
+        """
+        Get the dict of the element with all values. You can use it with `json.dumps()`.
+        """
+        result = {}
+        for key in self._types:
+            value = getattr(self, key, None)
+            if value == None and not getNoneValues:
+                continue
+            if isinstance(value, DictWrapper):
+                result[key] = value.getDict(getNoneValues)
+            else:
+                result[key] = value
+        return result
+    
+    def _getdict(self) -> dict:
         result = {}
         for key in self._types:
             value = getattr(self, key, None)
             if isinstance(value, DictWrapper):
-                result[key] = value.to_dict()
+                result[key] = value._getdict()
             else:
                 result[key] = value
         return result
     
     def __iter__(self):
-        return iter(self.to_dict().items())
+        return iter(self._getdict().items())
     
     def __repr__(self):
-        return repr(self.to_dict())
+        return repr(self._getdict())
     
     def __str__(self):
-        return str(self.to_dict())
+        return str(self._getdict())

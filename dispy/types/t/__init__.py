@@ -13,23 +13,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
-from typing import List, Dict, Any
-
-class Attachment(DictWrapper):
-    id: Snowflake
-    filename: str
-    title: str
-    description: str
-    content_type: str
-    size: int
-    url: str
-    proxy_url: str
-    height: int
-    width: int
-    ephemeral: bool
-    duration_secs: float
-    waveform: str
-    flags: int

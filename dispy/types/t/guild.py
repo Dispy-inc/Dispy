@@ -15,15 +15,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 from dispy.modules.result import result
 import asyncio
 
-from dispy.types.role import Role
-from dispy.types.emoji import Emoji
-from dispy.types.stickers import Sticker
-from dispy.types.user import User, AvatarDecorationData
+from dispy.types.t.role import Role
+from dispy.types.t.emoji import Emoji
+from dispy.types.t.stickers import Sticker
+from dispy.types.t.user import User, AvatarDecorationData
 
 class WelcomeScreenChannel(DictWrapper):
     channel_id: Snowflake

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
-from dispy.types.variable import Invalid
+from dispy.types.t.variable import Invalid
 from typing import Generic, TypeVar, Type
 
 T = TypeVar('T')

@@ -15,20 +15,45 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-from dispy.types.user import User
+from dispy.types.t.emoji import Emoji
+from dispy.types.t.channel import Channel
 
-class TeamMember(DictWrapper):
-    membership_state: int
-    team_id: Snowflake
-    user: User
-    role: str
 
-class Team(DictWrapper):
-    icon: str
+class ComponentDefaultValue(DictWrapper):
     id: Snowflake
-    members: List[TeamMember]
-    name: str
-    owner_user_id: Snowflake
+    type: str
+
+
+class ComponentOption(DictWrapper):
+    label: str
+    value: str
+    description: str
+    emoji: Emoji
+    default: bool
+
+
+class ComponentObject(DictWrapper):
+    type: int
+    style: int
+    label: str
+    emoji: Emoji
+    custom_id: str
+    sku_id: Snowflake
+    url: str
+    value: str
+    required: bool
+    disabled: bool
+    options: List[ComponentOption]
+    channel_types: List[Channel]
+    placeholder: str
+    default_values: List[ComponentDefaultValue]
+    min_values: int
+    max_values: int
+
+
+class Component(DictWrapper):
+    type: int
+    components: List[ComponentObject]

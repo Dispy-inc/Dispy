@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
 class RoleSubscriptionData(DictWrapper):

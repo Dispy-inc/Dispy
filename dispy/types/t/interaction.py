@@ -15,19 +15,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from dispy.modules.result import result
 from typing import List, Dict, Any
 import asyncio
 
-from dispy.types.message import Message
-from dispy.types.guild import Member
-from dispy.types.guild import Guild, Member
-from dispy.types.channel import Channel
-from dispy.types.message import ResolvedData
-from dispy.types.emoji import Emoji
-from dispy.types.entitlement import Entitlement
-from dispy.types.user import User
+from dispy.types.t.message import Message
+from dispy.types.t.guild import Member
+from dispy.types.t.guild import Guild, Member
+from dispy.types.t.channel import Channel
+from dispy.types.t.message import ResolvedData
+from dispy.types.t.emoji import Emoji
+from dispy.types.t.entitlement import Entitlement
+from dispy.types.t.user import User
 
 class CommandInteractionDataOptions(DictWrapper):
     name: str

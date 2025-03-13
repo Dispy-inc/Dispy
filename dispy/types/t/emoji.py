@@ -15,26 +15,24 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
+from urllib.parse import quote
 
-from dispy.types.user import User
+from dispy.types.t.role import Role
+from dispy.types.t.user import User
 
-class StickerItem(DictWrapper):
+class Emoji(DictWrapper):
     id: Snowflake
     name: str
-    format_type: int
-
-
-class Sticker(DictWrapper):
-    id: Snowflake
-    pack_id: Snowflake
-    name: str
-    description: str
-    tags: str
-    type: int
-    format_type: int
-    available: bool
-    guild_id: Snowflake
+    roles: List[Role]
     user: User
-    sort_value: int
+    require_colons: bool
+    managed: bool
+    animated: bool
+    available: bool
+    url_encode: str = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.url_encode = quote(f'{self.name}:{self.id}') if self.id else quote(self.name)

@@ -15,12 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-from dispy.types.permissions import Overwrite
-from dispy.types.user import User
-from dispy.types.thread import ThreadMetadata, ThreadMember, ForumTag, DefaultReaction
+from dispy.types.t.permissions import Overwrite
+from dispy.types.t.user import User
+from dispy.types.t.thread import ThreadMetadata, ThreadMember, ForumTag, DefaultReaction
 
 class IconEmoji(DictWrapper):
     name: str

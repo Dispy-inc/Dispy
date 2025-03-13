@@ -21,11 +21,12 @@ It is recommended to import it with `from dispy import *`
 # Internal
 from dispy.modules.intents import *
 from dispy.modules import *
-from dispy.types.user import User
-from dispy.types.variable import Snowflake
+from dispy.types.t.user import User
+from dispy.types.t.variable import Snowflake
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import error
-from dispy.types.command import SlashCommandBuilder
+from dispy.types.t.command import SlashCommandBuilder
+from dispy.types.t.embed import EmbedBuilder
 from dispy.modules.eventargs import _eventargs
 from dispy.data import data
 # External
@@ -159,6 +160,7 @@ class Bot(restapi): # <- this shit has taken me hours
             'op': 2,
             'd': {
                 'token': self.token,
+                'intents': self._intents(),
                 'properties': {
                     'os': 'linux',
                     'browser': 'dispy-lib',
@@ -166,8 +168,6 @@ class Bot(restapi): # <- this shit has taken me hours
                 }
             }
         }
-        if not self._self_bot:
-            payload['d'].update({'intents': self._intents()})
         self.token = None
         await self._ws.send_json(payload)
 
@@ -199,7 +199,6 @@ class Bot(restapi): # <- this shit has taken me hours
 
         ids = list(set([id for event in events if (intent_found := self._data.intents.get_intents(event)) for id in intent_found]))
         return sum(1 << int(id) for id in ids)
-
         
     # Start the bot
     async def _start(self):
@@ -254,6 +253,7 @@ class Bot(restapi): # <- this shit has taken me hours
             self.handler = handler
             self.eventargs = eventargs
             self.commands = commands
+            
         def link(self, command: SlashCommandBuilder, function: Callable = None, *, guild_id: Snowflake = False):
             def decorator(fn):
                 if self.eventargs.check_function(fn,'INTERACTION_CREATE'): # no_traceback
@@ -310,32 +310,10 @@ class Bot(restapi): # <- this shit has taken me hours
         if function is not None: return decorator(function)
         else: return decorator
 
-def TokenReader(filename: str) -> str:
-    """
-    Read the first line of any file and return it, making it useful for securing token.
-    """
-    try:
-        with open(filename, 'r') as file:
-            tokenline = file.readline()
-            return tokenline
-    except FileNotFoundError:
-        raise FileNotFoundError(f"File '{filename}' not found.")
-    except Exception as e:
-        raise ReferenceError(f"File '{filename}' cannot be read by TokenReader() with error {e}.")
-
 def Embed(**kwargs):
     content = {}
     content.update(kwargs)
     content['type'] = 'rich'
     return content
 
-# Types
-from dispy.types.message import Message
-from dispy.types.interaction import Interaction
-from dispy.types.user import User
-from dispy.types.embed import EmbedBuilder
-from dispy.types.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
-typesFunc = ['Message','User', 'Interaction', 'ReactionAdd', 'ReactionRemove', 'ReactionRemoveAll', 'ReactionRemoveEmoji']
-
-# END
-__all__ = ['Bot','EmbedBuilder','SlashCommandBuilder','Embed','TokenReader'] + typesFunc
+__all__ = ['Bot']

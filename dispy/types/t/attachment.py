@@ -15,33 +15,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-from dispy.types.guild import Member
-
-class ThreadMember(DictWrapper):
+class Attachment(DictWrapper):
     id: Snowflake
-    user_id: Snowflake
-    join_timestamp: Timestamp
+    filename: str
+    title: str
+    description: str
+    content_type: str
+    size: int
+    url: str
+    proxy_url: str
+    height: int
+    width: int
+    ephemeral: bool
+    duration_secs: float
+    waveform: str
     flags: int
-    member: Member
-
-class ThreadMetadata(DictWrapper):
-    archived: bool
-    auto_archive_duration: int
-    archive_timestamp: Timestamp
-    locked: bool
-    invitable: bool
-    create_timestamp: Timestamp
-
-class ForumTag(DictWrapper):
-    id: Snowflake
-    name: str
-    moderated: bool
-    emoji_id: Snowflake
-    emoji_name: str
-
-class DefaultReaction(DictWrapper):
-    emoji_id: Snowflake
-    emoji_name: str

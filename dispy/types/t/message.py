@@ -15,24 +15,24 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from dispy.modules.result import result
 import asyncio
 import re
 from urllib.parse import quote
 from typing import List, Dict, Any
 
-from dispy.types.user import User
-from dispy.types.role import Role, RoleSubscriptionData
-from dispy.types.embed import Embed, EmbedBuilder
-from dispy.types.channel import ChannelMention, Channel
-from dispy.types.attachment import Attachment
-from dispy.types.reaction import Reaction
-from dispy.types.application import Application
-from dispy.types.guild import Member
-from dispy.types.component import Component
-from dispy.types.stickers import StickerItem, Sticker
-from dispy.types.poll import Poll
+from dispy.types.t.user import User
+from dispy.types.t.role import Role, RoleSubscriptionData
+from dispy.types.t.embed import Embed, EmbedBuilder
+from dispy.types.t.channel import ChannelMention, Channel
+from dispy.types.t.attachment import Attachment
+from dispy.types.t.reaction import Reaction
+from dispy.types.t.application import Application
+from dispy.types.t.guild import Member
+from dispy.types.t.component import Component
+from dispy.types.t.stickers import StickerItem, Sticker
+from dispy.types.t.poll import Poll
 
 class MessageActivity(DictWrapper):
     type: int

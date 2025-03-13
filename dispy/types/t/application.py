@@ -15,12 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from dispy.modules.dictwrapper import DictWrapper
-from dispy.types.variable import Snowflake, Timestamp
+from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 
-from dispy.types.user import User
-from dispy.types.guild import Guild
-from dispy.types.team import Team
+from dispy.types.t.user import User
+from dispy.types.t.guild import Guild
+from dispy.types.t.team import Team
 
 class InstallParams(DictWrapper):
     scopes: List[str]
