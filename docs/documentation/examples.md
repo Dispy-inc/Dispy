@@ -6,6 +6,10 @@ icon: copy
 
 ***
 
+{% hint style="danger" %}
+These examples assume that you have the **Message Content** privileged intent enabled. Follow step 4 on the [Create a bot](readme/setup-your-bot-on-discord.md) guide.
+{% endhint %}
+
 ### Base Template
 
 This is how the base code of your bot should like, but I recommend hiding the token better.
@@ -25,7 +29,7 @@ bot.run()
 
 ### Help Command
 
-You can try your command by sending !help into a channel that the bot has access to. Please note that you need to have the Message Content Privileged Intent, follow [step 4 on the Create a bot guide](readme/setup-your-bot-on-discord.md).
+To test your command, simply send `!help` in a channel where the bot has access.
 
 ```python
 from dispy import Bot
@@ -51,7 +55,7 @@ bot.run()
 
 ### Embed Example
 
-From the Help Command Example.
+This is a basic example of the embed functionality, to see your embed, simply send `!help` in a channel where the bot has access.
 
 ```python
 from dispy import Bot, EmbedBuilder

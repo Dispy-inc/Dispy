@@ -22,7 +22,7 @@ If you don't know how to make a pull request (Demand to change the code), you ma
 
 {% stepper %}
 {% step %}
-#### Research
+**Research**
 
 Before you code a new function for Dispy, you need to know exactly how to do it.
 
@@ -30,7 +30,7 @@ In the [documentation](https://discord.com/developers/docs/intro) of discord, yo
 {% endstep %}
 
 {% step %}
-#### Amount
+**Amount**
 
 In Dispy, your function can be in multiple place, e.g. to create a message:
 
@@ -42,7 +42,7 @@ An API function need to be present on types that has the necessary informations 
 {% endstep %}
 
 {% step %}
-#### Where
+**Where**
 
 The API function for the bot object are located in **dispy.modules.**_**rest\_api.py**_.
 
@@ -50,7 +50,7 @@ For an object (e.g. Message), they are located in **dispy.types** and the file w
 {% endstep %}
 
 {% step %}
-#### Introduction
+**Introduction**
 
 If the object doesn't have the `_api = None` argument, you need to add it at the end of all the type definition. With this you can call the \_\_request\_\_ object.
 
@@ -63,11 +63,11 @@ import asyncio
 {% endstep %}
 
 {% step %}
-#### Create the Function
+**Create the Function**
 
 When creating a function, you need to follow some rules to be sure your pull request will be accepted.
 
-* If the API request return something, it need to has a type object (If it doesn't exist, create it using this guide[^2]) or put 'None' if nothing is returned
+* If the API request return something, it need to has a type object (If it doesn't exist, create it using this guide[^1]) or put 'None' if nothing is returned
 * It need to be asynchronous.
 * It need to be using the internal function of Dispy (`result` & `__request__`)
 * The line using \_\_request\_\_ need to have the comment `# no_traceback` at the end.
@@ -102,7 +102,7 @@ def function(self, argument=None, **kwargs) -> result[<Type>]:
 3. And `<path>`, you replace by the API path given by the Discord documentation.
 
 {% hint style="danger" %}
-If your function need to has an argument called **"embeds"**, you need to define it manually inside your \_asynchronous function and give it inside the **run\_coroutine\_threadsafe**. Don't ask me why, ask asyncio.
+Some arguments will need to be passed through **run\_coroutine\_threadsafe**.
 {% endhint %}
 {% endstep %}
 
@@ -116,9 +116,5 @@ It is important to test your functions before doing a pull request. Please.
 And you're done! Time to open a pull request
 
 [^1]: There is no guide yet.
-
-    Ask the developer :)
-
-[^2]: There is no guide yet.
 
     Ask the developer :)
