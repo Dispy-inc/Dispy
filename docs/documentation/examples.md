@@ -29,7 +29,7 @@ bot.run()
 
 ### Help Command
 
-To test your command, simply send `!help` in a channel where the bot has access.
+To test your command, simply send `!help` in a channel that the bot has access to.
 
 ```python
 from dispy import Bot
@@ -55,7 +55,7 @@ bot.run()
 
 ### Embed Example
 
-This is a basic example of the embed functionality, to see your embed, simply send `!help` in a channel where the bot has access.
+This is a basic example of the embed functionality, to see your embed, simply send `!help` in a channel that the bot has access to.
 
 ```python
 from dispy import Bot, EmbedBuilder
