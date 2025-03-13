@@ -62,7 +62,7 @@ Dispy lets bot developers focus on their ideas and the structure of their bots i
 > `^` mean it is ready and coded into dispy but isn't complete. [Contribute](https://jamesfrench.gitbook.io/dispy/informations/contribute) to finish it!</br>
 > `~` mean it is experimental and may be changed. (This can mean `^` too)
 
-The list is incomplete, go see the full list on the [documentation](https://jamesfrench.gitbook.io/dispy/informations/roadmap).</br>
+This list is incomplete, go see the full list on the [documentation](https://jamesfrench.gitbook.io/dispy/informations/roadmap).</br>
 
 ## <div align="center">Contributing</div>
 We truly appreciate any contributions! If you have suggestions for improvement, you can follow this [guide](https://jamesfrench.gitbook.io/dispy/informations/contribute) on the documentation!
@@ -89,14 +89,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## <div align="center">Getting started</div>
+## <div align="center">Getting Started</div>
 
-Install dispy with pip (`pip install dispy-bot`) and get started on using it with:
+Install it with:
+```
+pip install dispy-bot
+```
+And get started with:
 - [Setup your first bot](https://dispy.gitbook.io/docs/documentation/readme/setup-your-bot-on-discord)
-- [Example code](https://dispy.gitbook.io/docs/documentation/wiki/ready-print)
+- [Example codes](https://dispy.gitbook.io/docs/documentation/examples)
 
 ## <div align="center">Contact Us</div>
 
-If you have any questions or suggestions, feel free to reach out to me:
+If you have any questions, suggestions or security bug to report, feel free to reach out to me:
 - Email: **[contact@jamesfrench.fr](mailto:contact@jamesfrench.fr)**
 - Discord: **Jamesfrench_**
