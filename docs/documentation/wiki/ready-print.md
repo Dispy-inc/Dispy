@@ -23,9 +23,8 @@ This page is under construction!
 
 Print when the bot is online on discord. Don't forgot to replace 'your\_token' with your actual token.
 
-```python
-from dispy import Bot
-
+<pre class="language-python"><code class="lang-python"><strong>from dispy import Bot
+</strong>
 token = 'your_token'
 bot = Bot(token)
 
@@ -34,4 +33,4 @@ def on_ready(msg):
    print('READY')
 
 bot.run()
-```
+</code></pre>
