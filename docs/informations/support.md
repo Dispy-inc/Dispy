@@ -15,6 +15,7 @@ Because dispy is very new, I made a support page so you can know if you can make
 
 * **SEND** | **EDIT** | **DELETE** | **REPLY** Message
 * **ADD** | **REMOVE SPECIFIED** Reaction
+* **KICK** | **BAN** | **TIMEOUT** User & Member (Can depend on the data)
 
 ### Supported Types
 
