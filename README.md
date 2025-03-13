@@ -5,13 +5,11 @@
   </br>
   <strong>Discord Bot Library</strong>
   </br></br>
-  
-  [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-  ![PyPI - Downloads](https://img.shields.io/pypi/dm/dispy-bot)
-  ![Made with Heart](https://img.shields.io/badge/Made_with-%F0%9F%A4%8D-green)
-  </br>
-  ![Static Badge](https://img.shields.io/badge/Made_using-Python-yellow?logo=python&logoColor=white)
-  ![GitHub forks](https://img.shields.io/github/forks/JamesMinoucha/Dispy?style=flat)
+
+  ![Coded with Python Static Badge](https://img.shields.io/badge/python-FFFFFF?style=for-the-badge&logo=python&logoColor=FFFFFF&color=306998)
+  ![GPL-3.0 License Static Badge](https://img.shields.io/badge/GPL--3.0-FFFFFF?style=for-the-badge&color=%23BD0000)
+  ![Discord Static Badge](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+
 </div>
 
 # <p align="center"></p>
