@@ -70,7 +70,10 @@ class EmbedBuilder:
     def __init__(self):
         self.args = {}
         self.fields = []
-    def get(self):
+    def get(self) -> dict:
+        """
+        Return the dict object of the embed.
+        """
         content = {}
         content.update(self.args)
         if len(self.fields) > 0:
@@ -79,9 +82,15 @@ class EmbedBuilder:
         return content
     
     def setTitle(self, title: str):
+        """
+        Specify the title of the embed.
+        """
         self.args['title'] = title
         return self    
     def setDescription(self, description: str):
+        """
+        Specify the description of the embed.
+        """
         self.args['description'] = description
         return self    
     
@@ -91,10 +100,16 @@ class EmbedBuilder:
         proxy_icon_url: str
         url: str
     def setAuthor(self, author: dict | authorObject):
+        """
+        Specify the author that appear at the bottom of the embed.
+        """
         self.args['author'] = author
         return self
     
     def setUrl(self, url: str):
+        """
+        Specify the URL that the title should link to.
+        """
         self.args['url'] = url
         return self
     def setTimestamp(self, timestamp: Timestamp):
@@ -118,7 +133,7 @@ class EmbedBuilder:
         'brown': 0xA05601,
         'gray': 0xA9A9A9,
         'white': 0xFFFFFF,
-        #'embed-discord': 0x2B2D31 No more embed color, discord has changed design and they added so many cool colors that there is not enough consistent to keep it.
+        #'embed-discord': 0x2B2D31 No more embed color, discord has changed design and they added so many cool colors that there is not enough consistency to keep it.
     }
     def setColor(self, color: str | int | _colors):
         """
@@ -147,6 +162,9 @@ class EmbedBuilder:
         icon_url: str
         proxy_icon_url: str
     def setFooter(self, footer: dict | FooterObject):
+        """
+        Specify the footer of the embed.
+        """
         self.args['footer'] = footer
         return self
     
@@ -156,6 +174,10 @@ class EmbedBuilder:
         height: int
         width: int
     def setImage(self, image: dict | ImageObject):
+        """
+        Specify the image of the embed.
+        ⚠️ Will remove images defined before.
+        """
         self.args['image'] = image
         return self
     

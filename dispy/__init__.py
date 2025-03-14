@@ -16,7 +16,6 @@
 
 """
 Dispy is a light-weight discord API library.
-It is recommended to import it with `from dispy import *`
 """
 # Internal
 from dispy.modules.intents import *
@@ -36,7 +35,6 @@ import aiohttp # Need to be installed (with websocket_client)
 import json
 import threading
 import time
-import inspect
 import asyncio
 import os
 
@@ -52,6 +50,7 @@ import os
 # Developed by ✯James French✯ with ❤ and hopes x)
 # Licensed with GPLv3
 
+# I want to add: "See related page on the [wiki](https://jamesfrench.gitbook.io/dispy)."
 class Bot(restapi): # <- this shit has taken me hours
     #--------------------------------------------------------------------------------------#
     #                                      Bot Setup                                       #
@@ -59,8 +58,6 @@ class Bot(restapi): # <- this shit has taken me hours
     def __init__(self, token=None):
         """
         Define your bot.
-
-        See related page on the [wiki](https://jamesfrench.gitbook.io/dispy).
         """
         self.user: User = None
         self.status = 0
@@ -216,8 +213,9 @@ class Bot(restapi): # <- this shit has taken me hours
     #--------------------------------------------------------------------------------------#
     def run(self) -> None:
         """
-        Start your bot and make it online.
-        Make your bot capable of receiving events and sending events.
+        Start your bot.
+        - Will make it appear online
+        - Will make it capable of receiving events and sending requests
         """
         if self.status != 0: self._error.summon('bot_is_already_running')
         self.status = 1
@@ -225,9 +223,9 @@ class Bot(restapi): # <- this shit has taken me hours
         asyncio.run(self._start()) # no_traceback
         time.sleep(2)
 
-    def stop(self) -> None:
+    def stop(self) -> None: # Experimental, i really think there is still active threads after shutdown.
         """
-        Shutdown the bot. (EXPERIMENTAL)
+        Shutdown the bot.
         """
         async def _stop():
             if self._ws:
@@ -238,15 +236,15 @@ class Bot(restapi): # <- this shit has taken me hours
 
         asyncio.run_coroutine_threadsafe(_stop(),loop=self._loop)
 
-    def custom_request(self,function,path,payload=None):
+    def request(self, function, path, payload=None):
+        """
+        Make custom API request.
+        """
         async def asynchronous():
             return await self._api.__request__(function=function,path=path,payload=payload)
         
         future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self._loop)
         return future_result.result(timeout=7)
-
-    def _debug(self):
-        pass
 
     class _commands:
         def __init__(self, handler, eventargs, commands):
@@ -273,10 +271,8 @@ class Bot(restapi): # <- this shit has taken me hours
     #                                    Event Handler                                     #
     #--------------------------------------------------------------------------------------#
 
-    global _eventliteral
-    _eventliteral = Literal["GUILD_BAN_ADD", "MESSAGE_UPDATE", "GUILD_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_ALL", "GUILD_ROLE_CREATE", "GUILD_SCHEDULED_EVENT_CREATE", "GUILD_DELETE", "GUILD_SCHEDULED_EVENT_UPDATE", "ALL", "MESSAGE_REACTION_REMOVE_ALL", "GUILD_MEMBER_REMOVE", "INVITE_DELETE", "STAGE_INSTANCE_CREATE", "DIRECT_CHANNEL_PINS_UPDATE", "CHANNEL_DELETE", "GUILD_ROLE_UPDATE", "DIRECT_MESSAGE_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_EMOJI", "MESSAGE_DELETE_BULK", "THREAD_UPDATE", "MESSAGE_POLL_VOTE_REMOVE", "GUILD_SOUNDBOARD_SOUND_DELETE", "VOICE_STATE_UPDATE", "GUILD_INTEGRATIONS_UPDATE", "USER_UPDATE", "GUILD_ROLE_DELETE", "MESSAGE_REACTION_REMOVE", "DIRECT_MESSAGE_UPDATE", "MESSAGE_DELETE", "GUILD_SCHEDULED_EVENT_DELETE", "THREAD_MEMBER_UPDATE", "PRESENCE_UPDATE", "INTEGRATION_UPDATE", "GUILD_SOUNDBOARD_SOUND_CREATE", "WEBHOOKS_UPDATE", "GUILD_AUDIT_LOG_ENTRY_CREATE", "AUTO_MODERATION_RULE_DELETE", "READY", "AUTO_MODERATION_RULE_UPDATE", "THREAD_CREATE", "DIRECT_MESSAGE_POLL_VOTE_ADD", "RESUMED", "INTEGRATION_DELETE", "GUILD_UPDATE", "THREAD_DELETE", "GUILD_SOUNDBOARD_SOUNDS_UPDATE", "INVITE_CREATE", "MESSAGE_POLL_VOTE_ADD", "DIRECT_MESSAGE_REACTION_REMOVE", "CHANNEL_PINS_UPDATE", "MESSAGE_REACTION_REMOVE_EMOJI", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_ADD", "CHANNEL_CREATE", "VOICE_CHANNEL_EFFECT_SEND", "MESSAGE_REACTION_ADD", "GUILD_SCHEDULED_EVENT_USER_REMOVE", "GUILD_EMOJIS_UPDATE", "INTERACTION_CREATE", "DIRECT_MESSAGE_POLL_VOTE_REMOVE", "CHANNEL_UPDATE", "GUILD_BAN_REMOVE", "DIRECT_MESSAGE_DELETE", "VOICE_SERVER_UPDATE", "DIRECT_TYPING_START", "AUTO_MODERATION_RULE_CREATE", "GUILD_STICKERS_UPDATE", "MESSAGE_CREATE", "STAGE_INSTANCE_UPDATE", "THREAD_LIST_SYNC", "GUILD_SCHEDULED_EVENT_USER_ADD", "TYPING_START", "GUILD_SOUNDBOARD_SOUND_UPDATE", "INTEGRATION_CREATE", "THREAD_MEMBERS_UPDATE", "DIRECT_MESSAGE_REACTION_ADD", "AUTO_MODERATION_ACTION_EXECUTION", "STAGE_INSTANCE_DELETE"]
-
-    def on(self, eventname: _eventliteral = None, function: Callable = None, *, once: bool = False) -> None:
+    Events = Literal["GUILD_BAN_ADD", "MESSAGE_UPDATE", "GUILD_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_ALL", "GUILD_ROLE_CREATE", "GUILD_SCHEDULED_EVENT_CREATE", "GUILD_DELETE", "GUILD_SCHEDULED_EVENT_UPDATE", "ALL", "MESSAGE_REACTION_REMOVE_ALL", "GUILD_MEMBER_REMOVE", "INVITE_DELETE", "STAGE_INSTANCE_CREATE", "DIRECT_CHANNEL_PINS_UPDATE", "CHANNEL_DELETE", "GUILD_ROLE_UPDATE", "DIRECT_MESSAGE_CREATE", "DIRECT_MESSAGE_REACTION_REMOVE_EMOJI", "MESSAGE_DELETE_BULK", "THREAD_UPDATE", "MESSAGE_POLL_VOTE_REMOVE", "GUILD_SOUNDBOARD_SOUND_DELETE", "VOICE_STATE_UPDATE", "GUILD_INTEGRATIONS_UPDATE", "USER_UPDATE", "GUILD_ROLE_DELETE", "MESSAGE_REACTION_REMOVE", "DIRECT_MESSAGE_UPDATE", "MESSAGE_DELETE", "GUILD_SCHEDULED_EVENT_DELETE", "THREAD_MEMBER_UPDATE", "PRESENCE_UPDATE", "INTEGRATION_UPDATE", "GUILD_SOUNDBOARD_SOUND_CREATE", "WEBHOOKS_UPDATE", "GUILD_AUDIT_LOG_ENTRY_CREATE", "AUTO_MODERATION_RULE_DELETE", "READY", "AUTO_MODERATION_RULE_UPDATE", "THREAD_CREATE", "DIRECT_MESSAGE_POLL_VOTE_ADD", "RESUMED", "INTEGRATION_DELETE", "GUILD_UPDATE", "THREAD_DELETE", "GUILD_SOUNDBOARD_SOUNDS_UPDATE", "INVITE_CREATE", "MESSAGE_POLL_VOTE_ADD", "DIRECT_MESSAGE_REACTION_REMOVE", "CHANNEL_PINS_UPDATE", "MESSAGE_REACTION_REMOVE_EMOJI", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_ADD", "CHANNEL_CREATE", "VOICE_CHANNEL_EFFECT_SEND", "MESSAGE_REACTION_ADD", "GUILD_SCHEDULED_EVENT_USER_REMOVE", "GUILD_EMOJIS_UPDATE", "INTERACTION_CREATE", "DIRECT_MESSAGE_POLL_VOTE_REMOVE", "CHANNEL_UPDATE", "GUILD_BAN_REMOVE", "DIRECT_MESSAGE_DELETE", "VOICE_SERVER_UPDATE", "DIRECT_TYPING_START", "AUTO_MODERATION_RULE_CREATE", "GUILD_STICKERS_UPDATE", "MESSAGE_CREATE", "STAGE_INSTANCE_UPDATE", "THREAD_LIST_SYNC", "GUILD_SCHEDULED_EVENT_USER_ADD", "TYPING_START", "GUILD_SOUNDBOARD_SOUND_UPDATE", "INTEGRATION_CREATE", "THREAD_MEMBERS_UPDATE", "DIRECT_MESSAGE_REACTION_ADD", "AUTO_MODERATION_ACTION_EXECUTION", "STAGE_INSTANCE_DELETE"]
+    def on(self, eventname: Events = None, function: Callable = None, *, once: bool = False) -> None:
         """
         Add a function to call when a specific event is dispatched.
         """
@@ -301,7 +297,7 @@ class Bot(restapi): # <- this shit has taken me hours
         if function is not None: return decorator(function)
         else: return decorator
 
-    def once(self, eventname: _eventliteral = None, function: Callable = None, *, once: bool = True) -> None:
+    def once(self, eventname: Events = None, function: Callable = None, *, once: bool = True) -> None:
         """
         Add a function to call when a specific event is dispatched once.
         """
