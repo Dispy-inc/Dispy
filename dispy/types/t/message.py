@@ -154,7 +154,7 @@ class Message(DictWrapper):
                 if not isinstance(embeds, list): embeds = [embeds] # Convert to list
                 
                 for embed in embeds:
-                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed # no_traceback
                     if isinstance(embed, list):
                         result_embeds.extend(embed)
                     else:
@@ -200,7 +200,7 @@ class Message(DictWrapper):
                 if not isinstance(embeds, list): embeds = [embeds] # Convert to list
                 
                 for embed in embeds:
-                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed # no_traceback
                     if isinstance(embed, list):
                         result_embeds.extend(embed)
                     else:
@@ -248,7 +248,7 @@ class Message(DictWrapper):
                 if not isinstance(embeds, list): embeds = [embeds] # Convert to list
                 
                 for embed in embeds:
-                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed # no_traceback
                     if isinstance(embed, list):
                         result_embeds.extend(embed)
                     else:
