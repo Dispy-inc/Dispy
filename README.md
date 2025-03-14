@@ -19,11 +19,9 @@
   [Documentation](https://dispy.gitbook.io/docs) | [Pypi](https://pypi.org/project/dispy-bot) | [Discord Server](https://discord.gg/NXDsZpqJjT) | [Versions](https://dispy.gitbook.io/docs/informations/changelogs)
 </div>
   
-**Dispy** is a Python library that simplifies Discord bot development by handling all the complexities of asynchronous programming and API interactions. Unlike discord.py and discord.js, Dispy allows users to write straightforward Python code without worrying about intents, event loops, or async functions. The library runs everything asynchronously in the background, ensuring high performance without requiring the developer to manage any of it.
+**Dispy** is a Python library for making Discord bots that abstracts all the asynchronous programming and API interaction away. Dispy is different from discord.py and discord.js as it allows the user to write normal Python code and does not need intents, event loops, or async functions. Dispy does everything asynchronously in the background, meaning high performance without the developer having to deal with any of it.
 
-Dispy lets bot developers focus on their ideas and the structure of their bots instead of getting lost in the complexities of learning a library. It simplifies the development process, making it easier to bring creative concepts to life without the usual hassle.
-
-[readme-modification]: <> (Fixed an issue with the logo, changed the email, added roadmap items)
+Dispy enables bot creators to focus on their idea and their bots' structure instead of getting bogged down with learning an API. It makes development easier so that innovative concepts can be actualized without the frustration that normally comes with it.
 
 ### Built With
 - [Python](https://www.python.org/)
