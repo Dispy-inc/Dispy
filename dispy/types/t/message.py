@@ -131,7 +131,7 @@ class Message(DictWrapper):
             self.member.user = User(id = self.author.id)
 
     # Message
-    def reply(self,content: str = None, embeds: Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, **kwargs) -> result["Message"]:
+    def reply(self,content: str = None, embeds: Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, **kwargs) -> "Message":
         """
         Reply to the message.
         """
@@ -171,9 +171,9 @@ class Message(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)
     
-    def send(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: 'Message' = None, **kwargs) -> result["Message"]:
+    def send(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: 'Message' = None, **kwargs) -> "Message":
         """
         Send a message in the same channel as the message.
         """
@@ -217,9 +217,9 @@ class Message(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)
     
-    def delete(self) -> result[None]:
+    def delete(self) -> None:
         """
         Delete the message.
         """
@@ -230,9 +230,9 @@ class Message(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(self.channel_id, self.id), self._api._loop)
-        return result[None](future,self._api,None)
+        return result(future,self._api,None)
     
-    def edit(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> result["Message"]:
+    def edit(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> "Message":
         """
         Edit the message.
         You need to be the author of it to edit it.
@@ -265,9 +265,9 @@ class Message(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)
     
-    def react(self,emoji: str, id: int | str = None) -> result[None]:
+    def react(self,emoji: str, id: int | str = None) -> None:
         """
         Add a reaction to the message.
 
@@ -293,4 +293,4 @@ class Message(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(emoji), self._api._loop)
-        return result[None](future,self._api,None)
+        return result(future,self._api,None)

@@ -56,7 +56,7 @@ class Member(DictWrapper):
     guild_id: Snowflake = None
     _api = None
 
-    def kick(self, guild_id: Snowflake = None) -> result[None]:
+    def kick(self, guild_id: Snowflake = None) -> None:
         """
         Kick the member.
 
@@ -71,7 +71,7 @@ class Member(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(guild_id), self._api._loop)
-        return result[None](future,self._api,None)
+        return result(future,self._api,None)
 
 class Guild(DictWrapper):
     id: Snowflake

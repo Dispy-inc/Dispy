@@ -47,7 +47,7 @@ class ReactionAdd(DictWrapper):
     burst: bool
     burst_colors: List[Any]
 
-    def remove(self) -> result[None]:
+    def remove(self) -> None:
         """
         Remove the user reaction.
         """
@@ -58,7 +58,7 @@ class ReactionAdd(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(), self._api._loop)
-        return result[None](future,self._api,None)
+        return result(future,self._api,None)
 
 class ReactionRemove(DictWrapper):
     user_id: Snowflake

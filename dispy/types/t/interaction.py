@@ -81,7 +81,7 @@ class Interaction(DictWrapper):
     app_permissions: str
     _api = None
 
-    def reply(self,content=None,**kwargs) -> result["Message"]:
+    def reply(self,content=None,**kwargs) -> Message:
         """
         Reply to the message.
         """
@@ -114,4 +114,4 @@ class Interaction(DictWrapper):
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(content, **kwargs), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)

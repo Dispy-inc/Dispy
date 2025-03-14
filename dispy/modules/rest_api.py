@@ -81,7 +81,7 @@ class __internal__():
     #--------------------------------------------------------------------------------------#
     #                                       Requests                                       #
     #--------------------------------------------------------------------------------------#
-    def send_message(self,content=None, channel_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: Message = None, **kwargs) -> result[Message]:
+    def send_message(self,content=None, channel_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: Message = None, **kwargs) -> Message:
         
         """
         Send a message in a specific channel.
@@ -126,9 +126,9 @@ class __internal__():
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)
 
-    def delete_message(self,channel_id,message_id) -> result[None]:
+    def delete_message(self,channel_id,message_id) -> None:
         """
         Delete a specific message.
         """
@@ -139,9 +139,9 @@ class __internal__():
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(channel_id, message_id), self._api._loop)
-        return result[None](future,self._api,None)
+        return result(future,self._api,None)
     
-    def edit_message(self,content=None, channel_id=None, message_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> result[Message]:
+    def edit_message(self,content=None, channel_id=None, message_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> Message:
         
         """
         Edit a specific message in a specific channel.
@@ -175,4 +175,4 @@ class __internal__():
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
-        return result[Message](future,self._api,Message)
+        return result(future,self._api,Message)
