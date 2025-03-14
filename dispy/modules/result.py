@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
+from dispy.modules.error import summon
 from dispy.types.t.variable import Invalid
 from typing import Generic, TypeVar, Type
 
@@ -42,11 +43,11 @@ class result(Generic[T]):
             future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self.loop)
             result = future_result.result(timeout=7)
         else:
-            self.api._error.summon("getting_invalid",stop=False,error=self.future)
+            summon("getting_invalid",stop=False,error=self.future)
             return None
         
         if isinstance(result,Invalid):
-            self.api._error.summon("getting_invalid",stop=False,error=result)
+            summon("getting_invalid",stop=False,error=result)
             return None
         else:
             return self._cls(**result, _api=self.api) if hasattr(self._cls,'_api') else self._cls(**result)

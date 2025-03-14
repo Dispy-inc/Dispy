@@ -23,7 +23,7 @@ from dispy.modules import *
 from dispy.types.t.user import User
 from dispy.types.t.variable import Snowflake
 from dispy.modules.rest_api import __internal__ as restapi
-from dispy.modules.error import error
+from dispy.modules.error import summon
 from dispy.types.t.command import SlashCommandBuilder
 from dispy.types.t.embed import EmbedBuilder
 from dispy.modules.eventargs import _eventargs
@@ -66,14 +66,13 @@ class Bot(restapi): # <- this shit has taken me hours
         self._is_in_class = self.__class__ is not Bot
         self._registered_commands = []
         self._cachefile = os.path.expanduser('~/.dispy')
-        self._error = error()
         self._heartbeat_interval = None
         self._handlers = []
         self._session: aiohttp.ClientSession = None
         self._ws = None
-        self._api = restapi(self.token,self._error)
+        self._api = restapi(self.token)
         self._data = data()
-        self._eventargs = _eventargs(self._data.intents,self._error)
+        self._eventargs = _eventargs(self._data.intents)
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
@@ -217,7 +216,7 @@ class Bot(restapi): # <- this shit has taken me hours
         - Will make it appear online
         - Will make it capable of receiving events and sending requests
         """
-        if self.status != 0: self._error.summon('bot_is_already_running')
+        if self.status != 0: summon('bot_is_already_running')
         self.status = 1
         
         asyncio.run(self._start()) # no_traceback
@@ -277,7 +276,7 @@ class Bot(restapi): # <- this shit has taken me hours
         Add a function to call when a specific event is dispatched.
         """
         def decorator(fn):
-            if self.status != 0: self._error.summon('bot_is_running')
+            if self.status != 0: summon('bot_is_running')
 
             if eventname is None: event_name = fn.__name__.upper()
             else: event_name = eventname.upper()
@@ -293,7 +292,7 @@ class Bot(restapi): # <- this shit has taken me hours
                         "once": once,
                     }))
             else:
-                self._error.summon("event_invalid",event=event_name.upper())
+                summon("event_invalid",event=event_name.upper())
         if function is not None: return decorator(function)
         else: return decorator
 

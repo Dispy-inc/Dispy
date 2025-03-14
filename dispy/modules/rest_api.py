@@ -22,7 +22,9 @@ from dispy.modules import dict_to_obj
 from dispy.types.t.embed import EmbedBuilder
 from dispy.types.t.variable import Invalid
 from dispy.modules.result import result
-from typing import Generic, TypeVar, Type
+from dispy.modules.error import summon, get as geterror
+from typing import List
+from dispy.types.t.embed import Embed, EmbedBuilder
 
 # 888888ba  oo                               
 # 88    `8b ``                               
@@ -39,7 +41,7 @@ from typing import Generic, TypeVar, Type
 from dispy.types.t.message import Message
 
 class __internal__():
-    def  __init__(self,token,error_handler) -> None:
+    def  __init__(self,token) -> None:
         self.token = token
         self.__header = {
             'authorization': f'Bot {self.token}',
@@ -48,7 +50,6 @@ class __internal__():
         self._loop = asyncio.new_event_loop()
         self._base_url = 'https://discord.com/api/v10/'
         self._api = self
-        self._error = error_handler
         threading.Thread(target=self._run_loop, daemon=True).start()
     def _run_loop(self):
         asyncio.set_event_loop(self._loop)
@@ -63,8 +64,8 @@ class __internal__():
                 async with getattr(session, function)(f'{self._base_url}{path}', headers=self.__header, **args) as response:
                     if response.status not in [200, 204]:
                         error = json.loads(await response.text())
-                        self._error.summon("request_failed",stop=False,code=response.status,error=error["message"])
-                        return Invalid(self._error.get("request_failed",code=response.status,error=error["message"]))
+                        summon("request_failed",stop=False,code=response.status,error=error["message"])
+                        return Invalid(geterror("request_failed",code=response.status,error=error["message"]))
                     else:
                         if response.status != 204:
                             response_data = await response.json()
@@ -75,12 +76,12 @@ class __internal__():
                         else:
                             return None
             except Exception as err:
-                self._error.summon("dispy_request_error",stop=False,error=err)
+                summon("dispy_request_error",stop=False,error=err)
 
     #--------------------------------------------------------------------------------------#
     #                                       Requests                                       #
     #--------------------------------------------------------------------------------------#
-    def create_message(self,content=None, channel_id=None, embeds=None, reply_to: Message = None, **kwargs) -> result[Message]:
+    def send_message(self,content=None, channel_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: Message = None, **kwargs) -> result[Message]:
         
         """
         Send a message in a specific channel.
@@ -103,21 +104,23 @@ class __internal__():
                 })
     
             # Embed
-            if isinstance(embeds, list):
-                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
-            else:
-                if isinstance(embeds, EmbedBuilder):
-                    embeds = embeds.get()
-            if embeds is not None:
-                if not isinstance(embeds, list):
-                    embeds = [embeds]
-                payload.update({"embeds": embeds})
+            if embeds:
+                result_embeds = []
+                if not isinstance(embeds, list): embeds = [embeds] # Convert to list
+                
+                for embed in embeds:
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    if isinstance(embed, list):
+                        result_embeds.extend(embed)
+                    else:
+                        result_embeds.append(embed)
+                    payload.update({"embeds": result_embeds})
             
-            # Reste
+            # Others
             if kwargs:
                 payload.update(kwargs)
             if content:
-                payload.update({"content": content})
+                payload.update({"content": str(content)})
             
             result = await self._api.__request__('post', f'channels/{channel_id}/messages', payload) # no_traceback
             future.set_result(result)
@@ -138,7 +141,7 @@ class __internal__():
         asyncio.run_coroutine_threadsafe(_asynchronous(channel_id, message_id), self._api._loop)
         return result[None](future,self._api,None)
     
-    def edit_message(self,content=None, channel_id=None, message_id=None, embeds=None, **kwargs) -> result[Message]:
+    def edit_message(self,content=None, channel_id=None, message_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> result[Message]:
         
         """
         Edit a specific message in a specific channel.
@@ -150,21 +153,23 @@ class __internal__():
             payload = {}
 
             # Embed
-            if isinstance(embeds, list):
-                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
-            else:
-                if isinstance(embeds, EmbedBuilder):
-                    embeds = embeds.get()
-            if embeds is not None:
-                if not isinstance(embeds, list):
-                    embeds = [embeds]
-                payload.update({"embeds": embeds})
+            if embeds:
+                result_embeds = []
+                if not isinstance(embeds, list): embeds = [embeds] # Convert to list
+                
+                for embed in embeds:
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    if isinstance(embed, list):
+                        result_embeds.extend(embed)
+                    else:
+                        result_embeds.append(embed)
+                    payload.update({"embeds": result_embeds})
             
-            # Reste
+            # Others
             if kwargs:
                 payload.update(kwargs)
             if content:
-                payload.update({"content": content})
+                payload.update({"content": str(content)})
             
             result = await self._api.__request__('patch', f'channels/{channel_id}/messages/{message_id}', payload) # no_traceback
             future.set_result(result)

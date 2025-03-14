@@ -14,11 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from dispy.data.errors import errors
 from dispy.data.intents import intents
 from dispy.modules.intents import intents_variable
 
 class data:
     def __init__(self):
-        self.errors = errors
         self.intents = intents_variable(intents)

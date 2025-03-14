@@ -20,38 +20,36 @@ import re
 import os
 import asyncio
 import threading
-from dispy.data import errors
+from dispy.data.errors import errors
+
+asyncio_path = os.path.dirname(asyncio.__file__)
+threading_path = os.path.dirname(threading.__file__)
 
 # Custom error handling for dispy
+def summon(error_name,stop=True,**kwargs):
+    """
+    Custom error handling, do not use if you don't know what your doing.
+    """
+    # Print the traceback
+    stack = traceback.extract_stack()[:-2]
+    filtered_stack = [frame for frame in stack if not re.compile(r'#\s*no_traceback\s*$').search(frame.line.replace(' ',''))]
+    filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(asyncio_path)]
+    filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(threading_path)]
 
-class error:
-    def __init__(self):
-        self.errors = errors
-        self.asyncio_path = os.path.dirname(asyncio.__file__)
-        self.threading_path = os.path.dirname(threading.__file__)
-    def summon(self,error_name,stop=True,**kwargs):
-        """
-        Custom error handling, do not use if you don't know what your doing.
-        """
-        # Print the traceback
-        stack = traceback.extract_stack()[:-2]
-        filtered_stack = [frame for frame in stack if not re.compile(r'#\s*no_traceback\s*$').search(frame.line.replace(' ',''))]
-        filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(self.asyncio_path)]
-        filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(self.threading_path)]
+    if len(filtered_stack) > 0:
+        print('\033[93m' + errors['traceback'] + '\033[0m')
+        for frame in filtered_stack:
+            print(f"  {errors['file'].format(filename=frame.filename,line=frame.lineno,name=frame.name)}")
+            print(f"    {frame.line}")
+    else:
+        print('\033[93m' + errors['no_traceback'] + '\033[0m')
 
-        if len(filtered_stack) > 0:
-            print('\033[93m' + self.errors['traceback'] + '\033[0m')
-            for frame in filtered_stack:
-                print(f"  {self.errors['file'].format(filename=frame.filename,line=frame.lineno,name=frame.name)}")
-                print(f"    {frame.line}")
-        else:
-            print('\033[93m' + self.errors['no_traceback'] + '\033[0m')
+    error = errors[error_name].format(**kwargs)
+    print(f'\033[31m{error}\033[0m')    
 
-        error = self.errors[error_name].format(**kwargs)
-        print(f'\033[31m{error}\033[0m')    
+    # Exit the program
+    if stop: sys.exit()
+    else: return error
     
-        # Exit the program
-        if stop: sys.exit()
-        else: return error
-    def get(self,error_name,**kwargs):
-        return self.errors[error_name].format(**kwargs)
+def get(error_name,**kwargs):
+    return errors[error_name].format(**kwargs)

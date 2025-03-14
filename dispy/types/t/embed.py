@@ -17,6 +17,7 @@
 from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any, TypedDict, Literal
+from dispy.modules.error import summon
 import re
 
 class EmbedField(DictWrapper):
@@ -70,15 +71,24 @@ class EmbedBuilder:
     def __init__(self):
         self.args = {}
         self.fields = []
+        self.images = []
+        
     def get(self) -> dict:
         """
         Return the dict object of the embed.
         """
-        content = {}
-        content.update(self.args)
+        content = [{}]
+        content[0].update(self.args)
         if len(self.fields) > 0:
-            content.update({'fields': self.fields})
-        content['type'] = 'rich'
+            content[0].update({'fields': self.fields})
+        for i, image in enumerate(self.images):
+            if i == 0:
+                content[0]['image'] = image
+            else:
+                if not 'url' in self.args:
+                    summon('url_not_present_embed', False)
+                    break
+                content.append({"url": self.args['url'], "image": image})
         return content
     
     def setTitle(self, title: str):
@@ -106,7 +116,7 @@ class EmbedBuilder:
         self.args['author'] = author
         return self
     
-    def setUrl(self, url: str):
+    def setURL(self, url: str):
         """
         Specify the URL that the title should link to.
         """
@@ -173,12 +183,22 @@ class EmbedBuilder:
         proxy_url: str
         height: int
         width: int
-    def setImage(self, image: dict | ImageObject):
+        
+    def addImage(self, url: str):
         """
-        Specify the image of the embed.
+        Add an image to the embed. If more than 4, need to specify the URL with `.setURL()`.
+        """
+        self.images.append({"url": url})
+        return self
+    
+    def setImages(self, url: List[str]):
+        """
+        Specify the image of the embed. If more than 4, need to specify the URL with `.setURL()`.
+        
         ⚠️ Will remove images defined before.
         """
-        self.args['image'] = image
+        for image in url:
+            self.images.append({"url": image})
         return self
     
     class ThumbnailObject(TypedDict):
@@ -215,6 +235,7 @@ class EmbedBuilder:
     def setFields(self, *fields: List[Field] | Field):
         """
         Set one or multiple fields.
+        
         ⚠️ Will remove fields defined before.
         """
         fields = [item for arg in fields for item in (arg if isinstance(arg, list) else [arg])]
@@ -224,6 +245,7 @@ class EmbedBuilder:
     def setField(self, name: str, value: str, inline: bool = None):
         """
         Set one field.
+        
         ⚠️ Will remove fields defined before.
         """
         field = {'name': name, 'value': value}

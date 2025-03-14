@@ -16,6 +16,7 @@
 
 from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.t.variable import Snowflake, Timestamp
+from dispy.modules.error import summon
 from dispy.modules.result import result
 import asyncio
 import re
@@ -130,7 +131,7 @@ class Message(DictWrapper):
             self.member.user = User(id = self.author.id)
 
     # Message
-    def reply(self,content=None, embeds=None, **kwargs) -> result["Message"]:
+    def reply(self,content: str = None, embeds: Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, **kwargs) -> result["Message"]:
         """
         Reply to the message.
         """
@@ -148,21 +149,23 @@ class Message(DictWrapper):
             }
 
             # Embed
-            if isinstance(embeds, list):
-                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
-            else:
-                if isinstance(embeds, EmbedBuilder):
-                    embeds = embeds.get()
-            if embeds is not None:
-                if not isinstance(embeds, list):
-                    embeds = [embeds]
-                payload.update({"embeds": embeds})
+            if embeds:
+                result_embeds = []
+                if not isinstance(embeds, list): embeds = [embeds] # Convert to list
+                
+                for embed in embeds:
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    if isinstance(embed, list):
+                        result_embeds.extend(embed)
+                    else:
+                        result_embeds.append(embed)
+                    payload.update({"embeds": result_embeds})
             
-            # Reste
+            # Others
             if kwargs:
                 payload.update(kwargs)
             if content:
-                payload.update({"content": content})
+                payload.update({"content": str(content)})
             
             result = await self._api.__request__('post', f'channels/{self.channel_id}/messages', payload) # no_traceback
             future.set_result(result)
@@ -170,7 +173,7 @@ class Message(DictWrapper):
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
         return result[Message](future,self._api,Message)
     
-    def send(self,content=None, embeds=None, reply_to: 'Message' = None, **kwargs) -> result["Message"]:
+    def send(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: 'Message' = None, **kwargs) -> result["Message"]:
         """
         Send a message in the same channel as the message.
         """
@@ -180,7 +183,7 @@ class Message(DictWrapper):
             payload = {}
 
             # Reply
-            if reply_to != None:
+            if reply_to:
                 payload.update({
                     "message_reference": {
                         "channel_id": reply_to.channel_id,
@@ -192,21 +195,23 @@ class Message(DictWrapper):
                 })
     
             # Embed
-            if isinstance(embeds, list):
-                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
-            else:
-                if isinstance(embeds, EmbedBuilder):
-                    embeds = embeds.get()
-            if embeds is not None:
-                if not isinstance(embeds, list):
-                    embeds = [embeds]
-                payload.update({"embeds": embeds})
+            if embeds:
+                result_embeds = []
+                if not isinstance(embeds, list): embeds = [embeds] # Convert to list
+                
+                for embed in embeds:
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    if isinstance(embed, list):
+                        result_embeds.extend(embed)
+                    else:
+                        result_embeds.append(embed)
+                    payload.update({"embeds": result_embeds})
             
-            # Reste
+            # Others
             if kwargs:
                 payload.update(kwargs)
             if content:
-                payload.update({"content": content})
+                payload.update({"content": str(content)})
             
             result = await self._api.__request__('post', f'channels/{self.channel_id}/messages', payload) # no_traceback
             future.set_result(result)
@@ -227,7 +232,7 @@ class Message(DictWrapper):
         asyncio.run_coroutine_threadsafe(_asynchronous(self.channel_id, self.id), self._api._loop)
         return result[None](future,self._api,None)
     
-    def edit(self,content=None, embeds=None, **kwargs) -> result["Message"]:
+    def edit(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> result["Message"]:
         """
         Edit the message.
         You need to be the author of it to edit it.
@@ -238,21 +243,23 @@ class Message(DictWrapper):
             payload = {}
         
             # Embed
-            if isinstance(embeds, list):
-                embeds = [embed.get() if isinstance(embed, EmbedBuilder) else embed for embed in embeds]
-            else:
-                if isinstance(embeds, EmbedBuilder):
-                    embeds = embeds.get()
-            if embeds is not None:
-                if not isinstance(embeds, list):
-                    embeds = [embeds]
-                payload.update({"embeds": embeds})
+            if embeds:
+                result_embeds = []
+                if not isinstance(embeds, list): embeds = [embeds] # Convert to list
+                
+                for embed in embeds:
+                    embed = embed.get() if isinstance(embed, EmbedBuilder) else embed
+                    if isinstance(embed, list):
+                        result_embeds.extend(embed)
+                    else:
+                        result_embeds.append(embed)
+                    payload.update({"embeds": result_embeds})
             
-            # Reste
+            # Others
             if kwargs:
                 payload.update(kwargs)
             if content:
-                payload.update({"content": content})
+                payload.update({"content": str(content)})
             
             result = await self._api.__request__('patch', f'channels/{self.channel_id}/messages/{self.id}', payload) # no_traceback
             future.set_result(result)
@@ -264,7 +271,7 @@ class Message(DictWrapper):
         """
         Add a reaction to the message.
 
-        You can use unicode emoji like `❤️`, Use `Windows + :` on windows to open the emoji selection menu.
+        You can use unicode emoji like `❤️`, Use `Windows + .` on windows to open the emoji selection menu.
 
         For custom emoji, you need to put `name:id`, e.g. `blobreach:123456789012345678`. Or you can separate these two by attributing the argument id separatly.
         """
@@ -275,10 +282,10 @@ class Message(DictWrapper):
             if ':' in emoji or id:
                 if id: emoji = f'{emoji}:{str(id)}'
                 else:
-                    pattern = r"([a-zA-Z]+):(\d+)"
+                    pattern = r"([a-zA-Z]+):(\d+)" # No, i totally didn't use chatgpt
                     match = re.search(pattern, emoji)
                     if match: emoji = match.group(0)
-                    else: return self._api._error.summon('invalid_emoji',emoji_name=str(emoji),stop=False)
+                    else: summon('invalid_emoji',emoji_name=str(emoji),stop=False)
             else:
                 emoji = emoji[0]
             

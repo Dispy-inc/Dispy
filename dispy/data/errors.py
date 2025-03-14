@@ -29,5 +29,9 @@ errors = {
     "dispy_request_error": "An error occured with dispy during HTTP request: {error}",
     "getting_invalid": "You've tried to get() an invalid result, error of the result: {error}",
     "invalid_arguments": "You didn't give the argument {arg}!",
-    "invalid_emoji": "The emoji '{emoji_name}' is invalid"
+    "invalid_emoji": "The emoji '{emoji_name}' is invalid",
+    "dictwrapper_debug": "'{key}' was given but isn't defined in the DictWrapper '{dictwrapper}': '{value}' of type {type}",
+    "dictwrapper_getattr": "'{object}' object has no attribute '{name}'",
+    "dictwrapper_getitem": "'{item}' not found in '{object}'",
+    "url_not_present_embed": "To add an another image, you need to add an URL to the embed using .setURL()."
 }

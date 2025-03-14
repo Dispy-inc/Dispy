@@ -19,6 +19,7 @@
 
 from dispy.types.t.message import Message
 from dispy.types.t.interaction import Interaction
+from dispy.modules.error import summon
 from dispy.types.t.user import User
 from dispy.types.t.reaction import ReactionAdd, ReactionRemove, ReactionRemoveAll, ReactionRemoveEmoji
 from dispy.types.t.variable import Null
@@ -29,9 +30,8 @@ class _eventargs:
     """
     🚫 Don't use it if you don't know what you're doing.
     """
-    def __init__(self,intents,error):
+    def __init__(self,intents):
         self.intents = intents
-        self.error = error
         
     def set(self,eventname,api, **kwargs):
         if eventname == 'READY':
@@ -97,20 +97,20 @@ class _eventargs:
 
         if len(needed_type) == 0:
             if not len(current_types) == 0:
-                self.error.summon('noargs',eventname=eventname,function_name=function.__name__)
+                summon('noargs',eventname=eventname,function_name=function.__name__)
         else:
             for name, ntypes in needed_type.items():
                 # Check for missing arguments
                 if name not in current_types:
-                    self.error.summon('missing_args', function_name=function.__name__, name=name, arguments=stringcode)
+                    summon('missing_args', function_name=function.__name__, name=name, arguments=stringcode)
 
                 # Check for extra arguments (we don't want those shit)
                 for key in current_types:
                     if key not in needed_type:
-                        self.error.summon('extra_args', function_name=function.__name__, name=key, arguments=stringcode)
+                        summon('extra_args', function_name=function.__name__, name=key, arguments=stringcode)
 
                 # Check for types
                 input_type = current_types[name]
                 if ntypes is not Any and not issubclass(input_type,ntypes):
-                    self.error.summon('invalidtype_args', name=name, needed_type=ntypes.__name__, function_name=function.__name__, arguments=stringcode)
+                    summon('invalidtype_args', name=name, needed_type=ntypes.__name__, function_name=function.__name__, arguments=stringcode)
         return True

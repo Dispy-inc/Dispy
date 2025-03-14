@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from typing import get_type_hints, Any, Dict, List, Union, _GenericAlias
+from dispy.modules.error import summon
 import inspect
 import json
 
@@ -36,7 +37,7 @@ class DictWrapper:
         for key, value in kwargs.items():
             if key not in self._types and key != '_api':
                 if debug:
-                    raise KeyError(f"'{key}' was given but isn't defined in the DictWrapper '{self.__class__.__name__}': '{value}' of type {str(type(value)).upper()}")
+                    summon('dictwrapper_debug', False, key=key, dictwrapper=self.__class__.__name__, value=value, type=str(type(value)).upper())
                 else: continue
 
             if '_api' in kwargs:
@@ -56,7 +57,7 @@ class DictWrapper:
     def __getattr__(self, name):
         if name in self._types:
             return None
-        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+        summon('dictwrapper_getattr', True, object=self.__class__.__name__, name=name)
     
     def __getitem__(self, item):
         if hasattr(self, item):
@@ -64,7 +65,7 @@ class DictWrapper:
             if isinstance(value, DictWrapper):
                 return value._getdict()
             return value
-        raise KeyError(f"'{item}' not found in '{self.__class__.__name__}'")
+        summon('dictwrapper_getitem', True, item=item, object=self.__class__.__name__)
     
     def getDict(self, getNoneValues=False) -> dict:
         """
