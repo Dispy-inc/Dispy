@@ -32,15 +32,16 @@ This category is not very interesting for developer
   * [x] Generic Functions ^
   * [x] Custom Functions ^
   * [ ] Rate Handler (Rate Limit)
-  * [ ] Full Exception Support
 * [x] Autocompletion
   * [x] Dispatched Events \~
   * [x] API Output ^
   * [x] Bot User Object
-  * [ ] API Input
+  * [x] API Input
 * [x] Asynchronous
   * [x] Hidden
   * [x] A way of awaiting output
+* [ ] Loop & After call definition
+* [ ] Supporting running while executing (in background)
 * [ ] Sharding Handler
 * [ ] Auto-connect & Exception ignore (for linux machine)
 * [ ] Logging
