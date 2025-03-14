@@ -58,7 +58,7 @@ class Embed(DictWrapper):
 class EmbedBuilder:
     """
     You can build an embed like in discord.js, template to get started:
-    ```py
+    ```
     embed = (EmbedBuilder()
         .setTitle('Title')
         .setDescription('Very interesting title')
