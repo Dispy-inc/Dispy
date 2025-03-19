@@ -25,6 +25,7 @@ from dispy.types.t.variable import Snowflake
 from dispy.modules.rest_api import __internal__ as restapi
 from dispy.modules.error import summon
 from dispy.types.t.command import SlashCommandBuilder
+from dispy.modules.appdirs import user_data_dir
 from dispy.types.t.embed import EmbedBuilder
 from dispy.modules.eventargs import _eventargs
 from dispy.data import data
@@ -62,10 +63,10 @@ class Bot(restapi): # <- this shit has taken me hours
         self.user: User = None
         self.status = 0
         self.token = token
+        self.data_folder = user_data_dir('Dispy','Jamesfrench', "1.0") # It is not the dispy version but data folder version, I can change it when modifying how data work.
 
         self._is_in_class = self.__class__ is not Bot
         self._registered_commands = []
-        self._cachefile = os.path.expanduser('~/.dispy')
         self._heartbeat_interval = None
         self._handlers = []
         self._session: aiohttp.ClientSession = None
@@ -76,9 +77,6 @@ class Bot(restapi): # <- this shit has taken me hours
         self._loop = asyncio.new_event_loop()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
-
-        if self._cachefile.startswith('/root'):
-            self._cachefile = None
 
         self.commands = self._commands(self._handlers,self._eventargs,self._registered_commands)
         threading.Thread(target=self._run_loop, daemon=True).start()
