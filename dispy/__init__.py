@@ -86,6 +86,9 @@ class Bot(restapi): # <- this shit has taken me hours
 
     def __getattr__(self, name):
         return getattr(self._api, name)
+    
+    def _create_data_folder(self):
+        os.makedirs(self.data_folder, exist_ok=True)
 
     def config(self,token=None):
         if self.status != 0: return None
