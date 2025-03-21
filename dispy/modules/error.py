@@ -26,25 +26,30 @@ asyncio_path = os.path.dirname(asyncio.__file__)
 threading_path = os.path.dirname(threading.__file__)
 
 # Custom error handling for dispy
-def summon(error_name,stop=True,**kwargs):
+def summon(error_name,stop=True,*,number=None,user_stack=None,**kwargs):
     """
     Custom error handling, do not use if you don't know what your doing.
     """
     # Print the traceback
     stack = traceback.extract_stack()[:-2]
+    user_stack = [frame for frame in user_stack if not frame.filename.startswith(threading_path)]
     filtered_stack = [frame for frame in stack if not re.compile(r'#\s*no_traceback\s*$').search(frame.line.replace(' ',''))]
     filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(asyncio_path)]
     filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(threading_path)]
 
-    if len(filtered_stack) > 0:
+    if len(filtered_stack) > 0 or user_stack:
         print('\033[93m' + errors['traceback'] + '\033[0m')
+        for frame in user_stack:
+            print(f"  {errors['file'].format(filename=frame.filename, line=frame.lineno, name=frame.name)}")
+            print(f"    {frame.line}")
         for frame in filtered_stack:
             print(f"  {errors['file'].format(filename=frame.filename,line=frame.lineno,name=frame.name)}")
             print(f"    {frame.line}")
     else:
         print('\033[93m' + errors['no_traceback'] + '\033[0m')
 
-    error = errors[error_name].format(**kwargs)
+    error = errors[error_name][number] if number else errors[error_name]
+    error = error.format(**kwargs)
     print(f'\033[31m{error}\033[0m')    
 
     # Exit the program

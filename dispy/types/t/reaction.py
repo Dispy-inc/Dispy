@@ -52,9 +52,10 @@ class ReactionAdd(DictWrapper):
         Remove the user reaction.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous():
-            result = await self._api.__request__('delete', f'channels/{self.channel_id}/messages/{self.message_id}/reactions/{self.emoji.url_encode}/{self.user_id}', {}) # no_traceback
+            result = await self._api.request('delete', f'channels/{self.channel_id}/messages/{self.message_id}/reactions/{self.emoji.url_encode}/{self.user_id}', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(), self._api._loop)

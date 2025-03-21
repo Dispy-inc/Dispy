@@ -19,6 +19,7 @@ from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 from dispy.modules.result import result
 import asyncio
+import traceback
 
 from dispy.types.t.role import Role
 from dispy.types.t.emoji import Emoji
@@ -63,11 +64,12 @@ class Member(DictWrapper):
         In some cases, you will need to pass the argument `guild_id`.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(guild_id):
             if guild_id == None:
                 guild_id = self.guild_id
-            result = await self._api.__request__('delete', f'guilds/{guild_id}/members/{self.user.id}') # no_traceback
+            result = await self._api.request('delete', f'guilds/{guild_id}/members/{self.user.id}', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(guild_id), self._api._loop)

@@ -34,6 +34,7 @@ from typing import Callable, Literal
 from concurrent.futures import ThreadPoolExecutor
 import aiohttp # Need to be installed (with websocket_client)
 import json
+import traceback
 import threading
 import asyncio
 import os
@@ -69,6 +70,7 @@ class Bot(restapi): # <- this shit has taken me hours
         self._is_in_class = self.__class__ is not Bot
         self._registered_commands = []
         self._handlers = []
+        self._user_stack = traceback.extract_stack()[:-1]
         
         # Networking
         self._heartbeat_interval = None
@@ -126,7 +128,7 @@ class Bot(restapi): # <- this shit has taken me hours
                     if data['t'] == "READY":
                         self.user = User(**data['d']['user'])
                         if len(self._registered_commands) > 0:
-                            asyncio.run_coroutine_threadsafe(self._api.__request__('put',f'applications/{data['d']['user']['id']}/commands',payload=self._registered_commands), self._loop)
+                            asyncio.run_coroutine_threadsafe(self._api.request('put',f'applications/{data['d']['user']['id']}/commands',payload=self._registered_commands), self._loop)
                     asyncio.create_task(self._sendevent(data['t'],data['d']))
 
     # Used to call functions when a event is dispatched
@@ -214,9 +216,15 @@ class Bot(restapi): # <- this shit has taken me hours
             async with self._session.ws_connect('wss://gateway.discord.gg/?v=10&encoding=json') as ws:
                 self._ws = ws
                 await self._main()
+                if ws.closed:
+                    if ws.close_code in [4004]:
+                        summon('close_code', False, number=ws.close_code, user_stack=self._user_stack)
+                    else: 
+                        message = await ws.receive()
+                        reason = message.data if message.data is not None else "No data provided"
+                        summon('connection_closed', True, code=str(ws.close_code), reason=reason)
         finally:
             await self._session.close()
-        return None
 
     #--------------------------------------------------------------------------------------#
     #                                     Bot Control                                      #
@@ -230,6 +238,7 @@ class Bot(restapi): # <- this shit has taken me hours
         if self.status != 0: summon('bot_is_already_running') # Stupid i know
         self.status = 1
         
+        self._user_stack = traceback.extract_stack()[:-1]  
         future = asyncio.run_coroutine_threadsafe(self._start(), self._loop)
         future.result()
 
@@ -251,7 +260,7 @@ class Bot(restapi): # <- this shit has taken me hours
         Make custom API request.
         """
         async def asynchronous():
-            return await self._api.__request__(function=function,path=path,payload=payload)
+            return await self._api.request(function=function,path=path,payload=payload)
         
         future_result = asyncio.run_coroutine_threadsafe(asynchronous(), self._loop)
         return future_result.result(timeout=7)

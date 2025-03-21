@@ -33,5 +33,9 @@ errors = {
     "dictwrapper_debug": "'{key}' was given but isn't defined in the DictWrapper '{dictwrapper}': '{value}' of type {type}",
     "dictwrapper_getattr": "'{object}' object has no attribute '{name}'",
     "dictwrapper_getitem": "'{item}' not found in '{object}'",
-    "url_not_present_embed": "To add an another image, you need to add an URL to the embed using .setURL()."
+    "url_not_present_embed": "To add an another image, you need to add an URL to the embed using .setURL().",
+    "connection_closed": "Connection was closed unexpectedly, you can create an issue. Close-code: {code}, content: {reason}",
+    "close_code": {
+        4004: "Your token was rejeted by discord."
+    }
 }

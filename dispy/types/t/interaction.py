@@ -86,6 +86,7 @@ class Interaction(DictWrapper):
         Reply to the message.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(content, **kwargs):
             payload = {}
@@ -110,7 +111,7 @@ class Interaction(DictWrapper):
             if content:
                 payload.update({"content": content})
             
-            result = await self._api.__request__('post', f'webhooks/{self.application_id}/{self.token}', payload) # no_traceback
+            result = await self._api.request('post', f'webhooks/{self.application_id}/{self.token}', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(content, **kwargs), self._api._loop)

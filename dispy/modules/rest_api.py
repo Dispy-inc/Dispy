@@ -61,7 +61,7 @@ class __internal__():
     async def _generate_session(self):
         self._session = aiohttp.ClientSession()
 
-    async def __request__(self,function,path,payload=None):
+    async def request(self,function,path,payload=None,user_stack=None):
         args = {}
         if payload:
             args['json'] = payload
@@ -69,7 +69,7 @@ class __internal__():
             async with getattr(self._session, function)(f'{self._base_url}{path}', headers=self.__header, **args) as response:
                 if response.status not in [200, 204]:
                     error = json.loads(await response.text())
-                    summon("request_failed",stop=False,code=response.status,error=error["message"])
+                    summon("request_failed",stop=False,code=response.status,error=error["message"],user_stack=user_stack)
                     return Invalid(geterror("request_failed",code=response.status,error=error["message"]))
                 else:
                     if response.status != 204:
@@ -88,12 +88,13 @@ class __internal__():
     #--------------------------------------------------------------------------------------#
     #                                       Requests                                       #
     #--------------------------------------------------------------------------------------#
-    def send_message(self,content=None, channel_id=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: Message = None, **kwargs) -> Message:
+    def send_message(self,content=None, channel_id=None, embeds: Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, reply_to: Message = None, **kwargs) -> Message:
         
         """
         Send a message in a specific channel.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
 
         async def _asynchronous(embeds):
             payload = {}
@@ -129,7 +130,7 @@ class __internal__():
             if content:
                 payload.update({"content": str(content)})
             
-            result = await self._api.__request__('post', f'channels/{channel_id}/messages', payload) # no_traceback
+            result = await self._api.request('post', f'channels/{channel_id}/messages', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
@@ -140,9 +141,10 @@ class __internal__():
         Delete a specific message.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
 
         async def _asynchronous(channel_id,message_id):
-            result = await self._api.__request__('delete', f'channels/{channel_id}/messages/{message_id}') # no_traceback
+            result = await self._api.request('delete', f'channels/{channel_id}/messages/{message_id}', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(channel_id, message_id), self._api._loop)
@@ -155,6 +157,7 @@ class __internal__():
         You need to be the author of the message to edit it.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
     
         async def _asynchronous(embeds):
             payload = {}
@@ -178,7 +181,7 @@ class __internal__():
             if content:
                 payload.update({"content": str(content)})
             
-            result = await self._api.__request__('patch', f'channels/{channel_id}/messages/{message_id}', payload) # no_traceback
+            result = await self._api.request('patch', f'channels/{channel_id}/messages/{message_id}', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)

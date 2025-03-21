@@ -63,6 +63,7 @@ class User(DictWrapper):
         In some cases, you will need to pass the argument `guild_id`.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(guild_id):
             if guild_id == None:
@@ -70,7 +71,7 @@ class User(DictWrapper):
                     guild_id = self.guild_id
                 else:
                     raise TypeError('You need to pass the guild_id argument to kick()')
-            result = await self._api.__request__('delete', f'guilds/{guild_id}/members/{self.id}') # no_traceback
+            result = await self._api.request('delete', f'guilds/{guild_id}/members/{self.id}', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(guild_id), self._api._loop)

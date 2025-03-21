@@ -20,6 +20,7 @@ from dispy.modules.error import summon
 from dispy.modules.result import result
 import asyncio
 import re
+import traceback
 from urllib.parse import quote
 from typing import List, Dict, Any
 
@@ -136,6 +137,7 @@ class Message(DictWrapper):
         Reply to the message.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(embeds):
             payload = {
@@ -167,17 +169,18 @@ class Message(DictWrapper):
             if content:
                 payload.update({"content": str(content)})
             
-            result = await self._api.__request__('post', f'channels/{self.channel_id}/messages', payload) # no_traceback
+            result = await self._api.request('post', f'channels/{self.channel_id}/messages', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
         return result(future,self._api,Message)
     
-    def send(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], reply_to: 'Message' = None, **kwargs) -> "Message":
+    def send(self,content=None, embeds:Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, reply_to: 'Message' = None, **kwargs) -> "Message":
         """
         Send a message in the same channel as the message.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(embeds):
             payload = {}
@@ -213,7 +216,7 @@ class Message(DictWrapper):
             if content:
                 payload.update({"content": str(content)})
             
-            result = await self._api.__request__('post', f'channels/{self.channel_id}/messages', payload) # no_traceback
+            result = await self._api.request('post', f'channels/{self.channel_id}/messages', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
@@ -224,20 +227,22 @@ class Message(DictWrapper):
         Delete the message.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(channel_id,message_id):
-            result = await self._api.__request__('delete', f'channels/{channel_id}/messages/{message_id}') # no_traceback
+            result = await self._api.request('delete', f'channels/{channel_id}/messages/{message_id}', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(self.channel_id, self.id), self._api._loop)
         return result(future,self._api,None)
     
-    def edit(self,content=None, embeds = Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder], **kwargs) -> "Message":
+    def edit(self,content=None, embeds: Embed | List[Embed] | EmbedBuilder | List[EmbedBuilder] = None, **kwargs) -> "Message":
         """
         Edit the message.
         You need to be the author of it to edit it.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(embeds):
             payload = {}
@@ -261,7 +266,7 @@ class Message(DictWrapper):
             if content:
                 payload.update({"content": str(content)})
             
-            result = await self._api.__request__('patch', f'channels/{self.channel_id}/messages/{self.id}', payload) # no_traceback
+            result = await self._api.request('patch', f'channels/{self.channel_id}/messages/{self.id}', payload, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(embeds), self._api._loop)
@@ -276,6 +281,7 @@ class Message(DictWrapper):
         For custom emoji, you need to put `name:id`, e.g. `blobreach:123456789012345678`. Or you can separate these two by attributing the argument id separatly.
         """
         future = self._api._loop.create_future()
+        user_stack = traceback.extract_stack()[:-1]
         
         async def _asynchronous(emoji):
             # For custom emojis
@@ -289,7 +295,7 @@ class Message(DictWrapper):
             else:
                 emoji = emoji[0]
             
-            result = await self._api.__request__('put', f'channels/{self.channel_id}/messages/{self.id}/reactions/{quote(emoji)}/@me', {}) # no_traceback
+            result = await self._api.request('put', f'channels/{self.channel_id}/messages/{self.id}/reactions/{quote(emoji)}/@me', {}, user_stack) # no_traceback
             future.set_result(result)
         
         asyncio.run_coroutine_threadsafe(_asynchronous(emoji), self._api._loop)
