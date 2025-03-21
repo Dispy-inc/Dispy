@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import aiohttp
+import traceback
 import asyncio
 import json
 import threading
@@ -41,7 +42,7 @@ from dispy.types.t.embed import Embed, EmbedBuilder
 from dispy.types.t.message import Message
 
 class __internal__():
-    def  __init__(self,token) -> None:
+    def  __init__(self, token) -> None:
         self.token = token
         self.__header = {
             'authorization': f'Bot {self.token}',
@@ -49,34 +50,40 @@ class __internal__():
         }
         self._loop = asyncio.new_event_loop()
         self._base_url = 'https://discord.com/api/v10/'
+        self._session = None
         self._api = self
         threading.Thread(target=self._run_loop, daemon=True).start()
+        asyncio.run_coroutine_threadsafe(self._generate_session(), self._loop).result()
     def _run_loop(self):
         asyncio.set_event_loop(self._loop)
         self._loop.run_forever() # no_traceback
+        
+    async def _generate_session(self):
+        self._session = aiohttp.ClientSession()
 
     async def __request__(self,function,path,payload=None):
         args = {}
         if payload:
             args['json'] = payload
-        async with aiohttp.ClientSession() as session:
-            try:
-                async with getattr(session, function)(f'{self._base_url}{path}', headers=self.__header, **args) as response:
-                    if response.status not in [200, 204]:
-                        error = json.loads(await response.text())
-                        summon("request_failed",stop=False,code=response.status,error=error["message"])
-                        return Invalid(geterror("request_failed",code=response.status,error=error["message"]))
+        try:
+            async with getattr(self._session, function)(f'{self._base_url}{path}', headers=self.__header, **args) as response:
+                if response.status not in [200, 204]:
+                    error = json.loads(await response.text())
+                    summon("request_failed",stop=False,code=response.status,error=error["message"])
+                    return Invalid(geterror("request_failed",code=response.status,error=error["message"]))
+                else:
+                    if response.status != 204:
+                        response_data = await response.json()
+                        if isinstance(response_data, dict):
+                            return dict_to_obj(response_data)
+                        elif isinstance(response_data, list):
+                            return [dict_to_obj(item) for item in response_data]
                     else:
-                        if response.status != 204:
-                            response_data = await response.json()
-                            if isinstance(response_data, dict):
-                                return dict_to_obj(response_data)
-                            elif isinstance(response_data, list):
-                                return [dict_to_obj(item) for item in response_data]
-                        else:
-                            return None
-            except Exception as err:
-                summon("dispy_request_error",stop=False,error=err)
+                        return None
+        except Exception as err:
+            print(traceback.format_exc())
+            print(err)
+            summon("dispy_request_error",stop=False,error=err)
 
     #--------------------------------------------------------------------------------------#
     #                                       Requests                                       #

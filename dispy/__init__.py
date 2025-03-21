@@ -35,7 +35,6 @@ from concurrent.futures import ThreadPoolExecutor
 import aiohttp # Need to be installed (with websocket_client)
 import json
 import threading
-import time
 import asyncio
 import os
 
@@ -60,29 +59,41 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         Define your bot.
         """
+        # Public
         self.user: User = None
         self.status = 0
         self.token = token
         self.data_folder = user_data_dir('Dispy','Jamesfrench', "1.0") # It is not the dispy version but data folder version, I can change it when modifying how data work.
 
+        # Dispy
         self._is_in_class = self.__class__ is not Bot
         self._registered_commands = []
-        self._heartbeat_interval = None
         self._handlers = []
-        self._session: aiohttp.ClientSession = None
+        
+        # Networking
+        self._heartbeat_interval = None
+        self._loop = asyncio.new_event_loop() # Not the same loop as the API, so it can handle more requests.
+        self._session = None # Session for websocket
         self._ws = None
+        self._executor = ThreadPoolExecutor()
+        self._tasks = []
+        threading.Thread(target=self._run_loop, daemon=True).start()
+        future = asyncio.run_coroutine_threadsafe(self._generate_session(), self._loop)
+        future.result()
+        
+        # Internal
         self._api = restapi(self.token)
         self._data = data()
         self._eventargs = _eventargs(self._data.intents)
-        self._loop = asyncio.new_event_loop()
-        self._executor = ThreadPoolExecutor()
-        self._tasks = []
 
+        # Commands
         self.commands = self._commands(self._handlers,self._eventargs,self._registered_commands)
-        threading.Thread(target=self._run_loop, daemon=True).start()
     def _run_loop(self):
         asyncio.set_event_loop(self._loop)
         self._loop.run_forever() # no_traceback
+        
+    async def _generate_session(self):
+        self._session = aiohttp.ClientSession()
 
     def __getattr__(self, name):
         return getattr(self._api, name)
@@ -199,7 +210,6 @@ class Bot(restapi): # <- this shit has taken me hours
         
     # Start the bot
     async def _start(self):
-        self._session = aiohttp.ClientSession()
         try:
             async with self._session.ws_connect('wss://gateway.discord.gg/?v=10&encoding=json') as ws:
                 self._ws = ws
@@ -217,11 +227,11 @@ class Bot(restapi): # <- this shit has taken me hours
         - Will make it appear online
         - Will make it capable of receiving events and sending requests
         """
-        if self.status != 0: summon('bot_is_already_running')
+        if self.status != 0: summon('bot_is_already_running') # Stupid i know
         self.status = 1
         
-        asyncio.run(self._start()) # no_traceback
-        time.sleep(2)
+        future = asyncio.run_coroutine_threadsafe(self._start(), self._loop)
+        future.result()
 
     def stop(self) -> None: # Experimental, i really think there is still active threads after shutdown.
         """
