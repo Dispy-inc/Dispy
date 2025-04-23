@@ -1,6 +1,6 @@
 [project]
 name = "dispy-bot"
-version = "0.1.0.7"
+version = "0.1.1"
 authors = [
   { name="James French", email="jamesfrench.contact@gmail.com" },
 ]

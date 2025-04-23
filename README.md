@@ -31,7 +31,7 @@ Dispy enables bot creators to focus on their idea and their bots' structure inst
 
 ## <div align="center">Roadmap</div>
 **Current Stat:** Beta</br>
-**Current Version:** 0.1.0.7</br>
+**Current Version:** 0.1.1</br>
 **Current Stability:** Stable</br>
 
 - [x] Gateway & Events
@@ -43,16 +43,18 @@ Dispy enables bot creators to focus on their idea and their bots' structure inst
   - [x] Generic Functions ^
   - [x] Custom Functions ^
   - [ ] Rate Handler (Rate Limit)
-  - [ ] Full Exception Support
+  - [X] Full Exception Support
 - [x] Autocompletion
   - [x] Dispatched Events ~
   - [x] API Output ^
   - [x] Bot User Object
-  - [ ] API Input
+  - [X] API Input
 - [x] Asynchronous
   - [x] Hidden
   - [x] A way of awaiting output
   - [ ] Multiple bots support
+- [ ] Loop & After call definition
+- [ ] Supporting running while executing (in background)
 - [ ] Sharding Handler
 - [ ] Auto-connect & Exception ignore (for linux machine)
 - [ ] Logging
