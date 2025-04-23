@@ -6,7 +6,7 @@ icon: copy
 
 ***
 
-{% hint style="danger" %}
+{% hint style="info" %}
 These examples assume that you have the **Message Content** privileged intent enabled. Follow step 4 on the [Create a bot](readme/setup-your-bot-on-discord.md) guide.
 {% endhint %}
 
