@@ -32,6 +32,7 @@ This category is not very interesting for developer
   * [x] Generic Functions ^
   * [x] Custom Functions ^
   * [ ] Rate Handler (Rate Limit)
+  * [x] Full Exception Support
 * [x] Autocompletion
   * [x] Dispatched Events \~
   * [x] API Output ^
