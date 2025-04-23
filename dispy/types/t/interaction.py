@@ -19,6 +19,7 @@ from dispy.types.t.variable import Snowflake, Timestamp
 from dispy.modules.result import result
 from typing import List, Dict, Any
 import asyncio
+import traceback
 
 from dispy.types.t.message import Message
 from dispy.types.t.guild import Member

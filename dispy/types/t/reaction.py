@@ -18,6 +18,7 @@ from dispy.modules.dictwrapper import DictWrapper
 from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 import asyncio
+import traceback
 from dispy.modules.result import result
 
 from dispy.types.t.emoji import Emoji

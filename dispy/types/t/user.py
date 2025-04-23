@@ -19,6 +19,7 @@ from dispy.types.t.variable import Snowflake, Timestamp
 from typing import List, Dict, Any
 from dispy.modules.result import result
 import asyncio
+import traceback
 
 class AvatarDecorationData(DictWrapper):
     asset: str
