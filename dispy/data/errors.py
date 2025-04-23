@@ -36,6 +36,9 @@ errors = {
     "url_not_present_embed": "To add an another image, you need to add an URL to the embed using .setURL().",
     "connection_closed": "Connection was closed unexpectedly, you can create an issue. Close-code: {code}, content: {reason}",
     "close_code": {
-        4004: "Your token was rejeted by discord."
+        1000: "Heartbeat failed, check your internet connection.",
+        1006: "Connection was abnormally closed, try checking your token and making an issue.",
+        1008: "Heartbeat failed, check your internet connection.",
+        4004: "Your token was rejeted by discord.",
     }
 }

@@ -81,8 +81,6 @@ class __internal__():
                     else:
                         return None
         except Exception as err:
-            print(traceback.format_exc())
-            print(err)
             summon("dispy_request_error",stop=False,error=err)
 
     #--------------------------------------------------------------------------------------#

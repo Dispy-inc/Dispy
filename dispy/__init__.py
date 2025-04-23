@@ -27,6 +27,8 @@ from dispy.modules.error import summon
 from dispy.types.t.command import SlashCommandBuilder
 from dispy.modules.appdirs import user_data_dir
 from dispy.types.t.embed import EmbedBuilder
+from dispy.modules.heartbeats import Heartbeats
+from dispy.data.errors import errors
 from dispy.modules.eventargs import _eventargs
 from dispy.data import data
 # External
@@ -60,6 +62,10 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         Define your bot.
         """
+        # LOOPS & SESSIONS
+        # 3 LOOPS: websocket, api & heartbeats
+        # 2 SESSIONS: websocket & api
+        
         # Public
         self.user: User = None
         self.status = 0
@@ -73,10 +79,10 @@ class Bot(restapi): # <- this shit has taken me hours
         self._user_stack = traceback.extract_stack()[:-1]
         
         # Networking
-        self._heartbeat_interval = None
         self._loop = asyncio.new_event_loop() # Not the same loop as the API, so it can handle more requests.
         self._session = None # Session for websocket
         self._ws = None
+        self._heartbeats = Heartbeats()
         self._executor = ThreadPoolExecutor()
         self._tasks = []
         threading.Thread(target=self._run_loop, daemon=True).start()
@@ -119,8 +125,8 @@ class Bot(restapi): # <- this shit has taken me hours
             data = json.loads(msg.data)
     
             if data['op'] == 10: # Identification and heartbeat set
-                self._heartbeat_interval = data['d']['heartbeat_interval'] / 1000
-                asyncio.create_task(self._heartbeat())
+                interval = data['d']['heartbeat_interval'] / 1000
+                await self._heartbeats.run(self._ws, interval)
     
                 await self._identify()
             else: # Events
@@ -180,22 +186,7 @@ class Bot(restapi): # <- this shit has taken me hours
         }
         self.token = None
         await self._ws.send_json(payload)
-
-    # Send heartbeat to discord to keep the bot alive
-    async def _heartbeat(self):
-        """
-        🚫 Don't use it if you don't know what you're doing.
-        """
-        while self.status == 1: 
-            await asyncio.sleep(self._heartbeat_interval)
-            if self.status != 1:
-                break
-            heartbeat_payload = {
-                "op": 1,
-                "d": 'null'
-            }
-            await self._ws.send_json(heartbeat_payload)
-
+        
     # Used to calculate intents
     def _intents(self):
         """
@@ -217,14 +208,30 @@ class Bot(restapi): # <- this shit has taken me hours
                 self._ws = ws
                 await self._main()
                 if ws.closed:
-                    if ws.close_code in [4004]:
+                    if ws.close_code in errors['close_code']: # 1000 1008 are for heartbeat fail
                         summon('close_code', False, number=ws.close_code, user_stack=self._user_stack)
                     else: 
                         message = await ws.receive()
                         reason = message.data if message.data is not None else "No data provided"
-                        summon('connection_closed', True, code=str(ws.close_code), reason=reason)
+                        summon('connection_closed', False, code=str(ws.close_code), reason=reason, user_stack=self._user_stack)
         finally:
+            await self._stop()
+            return None
+            
+    async def _stop(self):
+        if self._ws:
+            await self._ws.close(code=1000)
+        if self._session:
             await self._session.close()
+        if self._api._session:
+            await self._api._session.close()
+        if self._loop:
+            self._loop.call_soon_threadsafe(self._loop.stop)
+        if self._api._loop:
+            self._api._loop.call_soon_threadsafe(self._api._loop.stop)
+        if self._heartbeats._running:
+            self._heartbeats.stop()
+        self.status = 0
 
     #--------------------------------------------------------------------------------------#
     #                                     Bot Control                                      #
@@ -246,14 +253,9 @@ class Bot(restapi): # <- this shit has taken me hours
         """
         Shutdown the bot.
         """
-        async def _stop():
-            if self._ws:
-                await self._ws.close(code=1000)
-            if self._session:
-                await self._session.close()
-            self.status = 0
 
-        asyncio.run_coroutine_threadsafe(_stop(),loop=self._loop)
+        future = asyncio.run_coroutine_threadsafe(self._stop(), self._loop)
+        future.result()
 
     def request(self, function, path, payload=None):
         """

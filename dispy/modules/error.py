@@ -20,6 +20,7 @@ import re
 import os
 import asyncio
 import threading
+import sys
 from dispy.data.errors import errors
 
 asyncio_path = os.path.dirname(asyncio.__file__)
@@ -32,25 +33,26 @@ def summon(error_name,stop=True,*,number=None,user_stack=None,**kwargs):
     """
     # Print the traceback
     stack = traceback.extract_stack()[:-2]
-    user_stack = [frame for frame in user_stack if not frame.filename.startswith(threading_path)]
+    if user_stack:
+        user_stack = [frame for frame in user_stack if not frame.filename.startswith(threading_path)]
     filtered_stack = [frame for frame in stack if not re.compile(r'#\s*no_traceback\s*$').search(frame.line.replace(' ',''))]
     filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(asyncio_path)]
     filtered_stack = [frame for frame in filtered_stack if not frame.filename.startswith(threading_path)]
 
     if len(filtered_stack) > 0 or user_stack:
-        print('\033[93m' + errors['traceback'] + '\033[0m')
+        sys.stdout.write('\033[93m' + errors['traceback'] + '\033[0m' + '\n')
         for frame in user_stack:
-            print(f"  {errors['file'].format(filename=frame.filename, line=frame.lineno, name=frame.name)}")
-            print(f"    {frame.line}")
+            sys.stdout.write(f"  {errors['file'].format(filename=frame.filename, line=frame.lineno, name=frame.name)}\n")
+            sys.stdout.write(f"    {frame.line}\n")
         for frame in filtered_stack:
-            print(f"  {errors['file'].format(filename=frame.filename,line=frame.lineno,name=frame.name)}")
-            print(f"    {frame.line}")
+            sys.stdout.write(f"  {errors['file'].format(filename=frame.filename,line=frame.lineno,name=frame.name)}\n")
+            sys.stdout.write(f"    {frame.line}\n")
     else:
-        print('\033[93m' + errors['no_traceback'] + '\033[0m')
+        sys.stdout.write('\033[93m' + errors['no_traceback'] + '\033[0m' + '\n')
 
     error = errors[error_name][number] if number else errors[error_name]
     error = error.format(**kwargs)
-    print(f'\033[31m{error}\033[0m')    
+    sys.stdout.write(f'\033[31m{error}\033[0m\n')    
 
     # Exit the program
     if stop: sys.exit()

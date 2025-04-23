@@ -25,6 +25,12 @@ class AvatarDecorationData(DictWrapper):
     sku_id: Snowflake
     expires_at: int
 
+class GuildTag(DictWrapper):
+    tag: str
+    identity_guild_id: int
+    identity_enabled: bool
+    badge: str
+
 class User(DictWrapper):
     id: Snowflake
     username: str
@@ -32,7 +38,7 @@ class User(DictWrapper):
     display_name: str
     global_name: str
     avatar: str
-    clan: Any
+    clan: GuildTag
     bot: bool
     system: bool # This is useless x)
     mfa_enabled: bool
@@ -45,16 +51,16 @@ class User(DictWrapper):
     accent_color: int
     premium_type: int
     public_flags: int
-    primary_guild: str
+    primary_guild: GuildTag
     avatar_decoration_data: AvatarDecorationData
-    whole_name: str = None
+    full_username: str = None
     guild_id: Snowflake = None
     _api = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.username and self.discriminator:
-            self.whole_name = f'{self.username}{f'#{self.discriminator}' if self.discriminator != '0' else ''}'
+            self.full_username = f'{self.username}{f'#{self.discriminator}' if self.discriminator != '0' else ''}'
 
     def kick(self, guild_id: Snowflake = None) -> None:
         """

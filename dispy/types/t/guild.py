@@ -37,7 +37,6 @@ class WelcomeScreen(DictWrapper):
     description: str
     welcome_channels: List[WelcomeScreenChannel]
 
-
 class Member(DictWrapper):
     user: User
     nick: str
